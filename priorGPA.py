@@ -1,8 +1,6 @@
 
 #!/usr/bin/env python
 
-
-# -*- coding: utf-8 -*-
 """
 Perform hyperaligment with prior. The modification is in the SVD in the procustean problem.
 We decompose X_i M + k Q instead of X_i M.
@@ -22,27 +20,54 @@ import decimal as dc
 #context.prec = 55
 import math
 
-__all__= ['priorHyA'] #explicitly exports the symbols priorHyA
+__all__= ['priorGPA'] #explicitly exports the symbols priorHyA
 
 #if you need explit here some function as 
 
-class priorHyA:
+class priorGPA:
+    
+    """Align multiple matrices, e.g., fMRI images, into a common feature space using Procrustes orthogonal transformation. 
+    The aligorithm is a slight modification of the Generalized Procrustes Analysis :ref:`Gower, J. C., Psychometrika, (1975).` 
+    *Generalized procrustes analysis.* We decompose by Singular Value Decomposition X_i^\top M + k Q instead of X_i^\top M.
+    Examples
+    --------
+    >>> # get some example data
+    >>> from mvpa2.testing.datasets import datasets
+    >>> from mvpa2.misc.data_generators import random_affine_transformation
+    >>> ds4l = datasets['uni4large']
+    >>> # generate a number of distorted variants of this data
+    >>> dss = [random_affine_transformation(ds4l) for i in xrange(4)]
+    >>> gp = priorGPA()
+    >>> gp.train(dss)
+    >>> mappers = gp(dss)
+    >>> len(mappers)
+    4
+    """
     
     #context = getcontext()
     #context.prec = 55
     #chosen_ref_ds = mvpa2.ConditionalAttribute(enabled=True,
             #doc="""Index of the input dataset used as 1st-level reference dataset.""")
     
-    #maxIt = mvpa2.Parameter(5, constraints=(mvpa2.EnsureInt() & mvpa2.EnsureRange(min=0)),
-            #doc=""" maximum number of iteration used in the Generalised Procrustes Analysis """)
+    maxIt = mvpa2.Parameter(5, constraints=(mvpa2.EnsureInt() & mvpa2.EnsureRange(min=0)),
+            doc=""" maximum number of iteration used in the Generalised Procrustes Analysis """)
     
-    #T = mvpa2.Parameter(1, constraints= mvpa2.EnsureRange(min=0), doc=""" the threshold value to be reached as the minimum relative reduction between the matrices """)
+    t = mvpa2.Parameter(1, constraints= mvpa2.EnsureRange(min=0), doc=""" the threshold value to be reached as the minimum relative reduction between the matrices """)
     
-    #k = mvpa2.Parameter(1, constraints= mvpa2.EnsureRange(min=0), doc=""" value of the concentration parameter of the prior distribution """)
+    k = mvpa2.Parameter(1, constraints= mvpa2.EnsureRange(min=0), doc=""" value of the concentration parameter of the prior distribution """)
     
-    #Q = mvpa2.Parameter(0, doc=""" value of the location parameter of the prior distribution. It has dimension voxels x voxels, it could be not symmetric. """)
+    Q = mvpa2.Parameter(0, doc=""" value of the location parameter of the prior distribution. It has dimension voxels x voxels, it could be not symmetric. """)
     
-    #ref_ds = mvpa2.Parameter(None, doc=""" index starting matrix to align """)
+    ref_ds = mvpa2.Parameter(None, doc=""" index starting matrix to align """)
+    
+    scaling = mvpa2.Parameter(True, constraints='bool',
+              doc="""Flag to apply scaling transformation""")
+    
+    reflection = mvpa2.Parameter(True, constraints='bool',
+                 doc="""Flag to apply reflection transformation""")
+    
+    subj = mvpa2.Parameter(True, constraints='bool',
+                 doc="""Flag if each subject has his/her own set of voxel after voxel selection step""")
     
     def __init__(self, maxIt, t, k, Q, ref_ds, scaling, reflection, subj):
         #mvpa2.base.state.ClassWithCollections.__init__(self)
@@ -58,17 +83,13 @@ class priorHyA:
          
         #params = self.params            
         # Check to make sure we get a list of datasets as input.
-        #if not isinstance(datasets, (list, tuple, np.ndarray)):
-        #    raise TypeError("Input datasets should be a sequence "
-        #                   "(of type list, tuple, or ndarray) of datasets.")
+        if not isinstance(datasets, (list, tuple, np.ndarray)):
+            raise TypeError("Input datasets should be a sequence "
+                           "(of type list, tuple, or ndarray) of datasets.")
         
         ndatasets = len(datasets)
-        #v = np.int64(datasets[0].samples.shape[1])
-        #ssqs = ssqs = [np.sum(dataset.samples**2, axis=0) for d in datasets]
-        #norms = [ np.sqrt(np.sum(ssq)) for ssq in ssqs ]
-        #normed = [ data.samples/norm for (data, norm) in zip(datasets, norms) ]
-        #nfeatures = [ds.nfeatures for ds in datasets]
-        k = self.k #quick access
+        #quick access parameters
+        k = self.k 
         Q = self.Q
         t = self.t
         maxIt = self.maxIt
@@ -76,13 +97,12 @@ class priorHyA:
         scaling = self.scaling
         reflection = self.reflection
         subj = self.subj
-        #if A.ndim != 2:
-        #    raise ValueError('expected ndim to be 2, but observed %s' % A.ndim)
+
+        #Implement having list without datasets structure
+        shape_datasets = [ds.samples.shape for ds in datasets]
         
-        #if A.shape != B.shape:
-        #raise ValueError('the shapes of A and B differ (%s vs %s)' % (
-        #    A.shape, B.shape))
-        #A = (datasets[ds].samples for ds in range(ndatasets))
+        if !all(x==shape_datasets[0] for x in shape_datasets):
+            raise ValueError('the shapes of datasets are different')
         
         row, col = datasets[0].samples.shape
         
@@ -117,14 +137,14 @@ class priorHyA:
                     if Q is None:
                         Q = np.zeros((col,col)) 
                     #Put transposes to save memory.
-                    #U, s, Vt =  np.linalg.svd((ref_ds.T.dot(X[i]) + k * Q.T).T, full_matrices = False)
-                    U, s, Vt =  np.linalg.svd(X[i].T.dot(ref_ds) + k * Q, full_matrices = False)
+                    U, s, Vt =  np.linalg.svd((ref_ds.T.dot(X[i]) + k * Q.T).T, full_matrices = False)
+                    #U, s, Vt =  np.linalg.svd(X[i].T.dot(ref_ds) + k * Q, full_matrices = False)
 
                 else:
                     if Q is None:
                         Q = np.zeros(col) 
-                    #U, s, Vt =  np.linalg.svd((ref_ds.T.dot(X[i]) + k * Q[i].T).T, full_matrices = False)      
-                    U, s, Vt =  np.linalg.svd(X[i].T.dot(ref_ds) + k * Q[i], full_matrices = False)                
+                    U, s, Vt =  np.linalg.svd((ref_ds.T.dot(X[i]) + k * Q[i].T).T, full_matrices = False)      
+                    #U, s, Vt =  np.linalg.svd(X[i].T.dot(ref_ds) + k * Q[i], full_matrices = False)                
 
                 if not reflection: 
                     s_new = np.diag(np.ones(len(s)))
