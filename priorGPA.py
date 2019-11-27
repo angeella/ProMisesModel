@@ -101,7 +101,7 @@ class priorGPA:
         #Implement having list without datasets structure
         shape_datasets = [ds.samples.shape for ds in datasets]
         
-        if !all(x==shape_datasets[0] for x in shape_datasets):
+        if not all(x==shape_datasets[0] for x in shape_datasets):
             raise ValueError('the shapes of datasets are different')
         
         row, col = datasets[0].samples.shape
