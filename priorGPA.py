@@ -24,24 +24,38 @@ __all__= ['priorGPA'] #explicitly exports the symbols priorHyA
 
 #if you need explit here some function as 
 
-class priorGPA:
+class priorGPA(ClassWithCollections):
     
     """Align multiple matrices, e.g., fMRI images, into a common feature space using Procrustes orthogonal transformation. 
     The aligorithm is a slight modification of the Generalized Procrustes Analysis :ref:`Gower, J. C., Psychometrika, (1975).` 
     *Generalized procrustes analysis.* We decompose by Singular Value Decomposition X_i^\top M + k Q instead of X_i^\top M.
     Examples
     --------
-    >>> # get some example data
-    >>> from mvpa2.testing.datasets import datasets
-    >>> from mvpa2.misc.data_generators import random_affine_transformation
-    >>> ds4l = datasets['uni4large']
-    >>> # generate a number of distorted variants of this data
-    >>> dss = [random_affine_transformation(ds4l) for i in xrange(4)]
-    >>> gp = priorGPA()
-    >>> gp.train(dss)
-    >>> mappers = gp(dss)
+    
+    >>> import numpy as np
+    >>> import mvpa2
+    >>> from mvpa2.suite import *
+    >>> import os
+    >>> os.chdir('yourpathwhere_priorGPA.py_is')
+    >>> from priorGPA import priorGPA
+    >>> #Load dataset
+    >>> ds_all = h5load('//dartfs-hpc/rc/home/w/f003vpw/ObjectAnalysis/data/hyperalignment_tutorial_data_2.4.hdf5.gz')
+    >>> #Number of voxels to select
+    >>> nf = 80
+    >>> # Automatic feature selection
+    >>> fselector = FixedNElementTailSelector(nf, tail='upper',mode='select', sort=False)
+    >>> anova = OneWayAnova()
+    >>> fscores = [anova(sd) for sd in ds_all]
+    >>> featsels = [StaticFeatureSelection(fselector(fscore)) for fscore in fscores]
+    >>> ds_all_fs = [fs.forward(sd) for fs, sd in zip(featsels, ds_all)]
+    >>> #Compute Location Parameter as Similarity Matrix using the euclidean distance of the three dimensional coordinates of the voxels
+    >>> coord = [ds.fa.voxel_indices for ds in ds_all_fs]
+    >>> dist = [cdist(c, c, "euclidean") for c in coord]
+    >>> Q = [np.exp(-d/c.shape[0]) for d,c in zip(dist,coord)]
+    >>> #Alignment step
+    >>> gp = priorGPA(maxIt = 10, t = 0.001, k = 1, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=True)
+    >>> mappers = gp.gpa(ds_all_fs)[1]
     >>> len(mappers)
-    4
     """
     
     #context = getcontext()
@@ -49,24 +63,24 @@ class priorGPA:
     #chosen_ref_ds = mvpa2.ConditionalAttribute(enabled=True,
             #doc="""Index of the input dataset used as 1st-level reference dataset.""")
     
-    maxIt = mvpa2.Parameter(5, constraints=(mvpa2.EnsureInt() & mvpa2.EnsureRange(min=0)),
+    maxIt = Parameter(5, constraints=EnsureInt() & EnsureRange(min=0)),
             doc=""" maximum number of iteration used in the Generalised Procrustes Analysis """)
     
-    t = mvpa2.Parameter(1, constraints= mvpa2.EnsureRange(min=0), doc=""" the threshold value to be reached as the minimum relative reduction between the matrices """)
+    t = Parameter(1, constraints= EnsureRange(min=0), doc=""" the threshold value to be reached as the minimum relative reduction between the matrices """)
     
-    k = mvpa2.Parameter(1, constraints= mvpa2.EnsureRange(min=0), doc=""" value of the concentration parameter of the prior distribution """)
+    k = Parameter(1, constraints= EnsureRange(min=0), doc=""" value of the concentration parameter of the prior distribution """)
     
-    Q = mvpa2.Parameter(0, doc=""" value of the location parameter of the prior distribution. It has dimension voxels x voxels, it could be not symmetric. """)
+    Q = Parameter(0, doc=""" value of the location parameter of the prior distribution. It has dimension voxels x voxels, it could be not symmetric. """)
     
     ref_ds = mvpa2.Parameter(None, doc=""" index starting matrix to align """)
     
-    scaling = mvpa2.Parameter(True, constraints='bool',
+    scaling = Parameter(True, constraints='bool',
               doc="""Flag to apply scaling transformation""")
     
-    reflection = mvpa2.Parameter(True, constraints='bool',
+    reflection = Parameter(True, constraints='bool',
                  doc="""Flag to apply reflection transformation""")
     
-    subj = mvpa2.Parameter(True, constraints='bool',
+    subj = Parameter(True, constraints='bool',
                  doc="""Flag if each subject has his/her own set of voxel after voxel selection step""")
     
     def __init__(self, maxIt, t, k, Q, ref_ds, scaling, reflection, subj):
