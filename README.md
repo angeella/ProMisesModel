@@ -72,12 +72,12 @@ nsubjs = len(img)
 ```
 
 ```python
-coord = img_Left[0].fa.voxel_indices
+coord = img[0].fa.voxel_indices
 dist = distance.cdist(np.array(coord), np.array(coord), "euclidean")
-Q = np.exp(-dist/coord.shape[0])
+Q = np.exp(-dist)
 hyper = priorGPA(maxIt = 10, t = 0.001, k = 2, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
 
-hypmaps = hyper.gpaSub(datasets=img_Left)
+hypmaps = hyper.gpaSub(datasets=img)
 
 Xest = hypmaps[0]
 ```
@@ -88,7 +88,7 @@ out = img
 
 #be sure that we work in float
 for ds in range(len(out)): 
-    out[ds].samples = np.column_stack((Xest_Right[ds].astype(np.float64), Xest_Left[ds].astype(np.float64)))
+    out[ds].samples = np.column_stack((Xest[ds].astype(np.float64), Xest[ds].astype(np.float64)))
     
 for ds in range(len(out)):
   nimg = mvpa2.datasets.mri.map2nifti(out[ds])
