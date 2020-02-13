@@ -136,19 +136,31 @@ class priorGPA(ClassWithCollections):
         scaling = self.scaling
         reflection = self.reflection
         subj = self.subj
-
-        #Implement having list without datasets structure
-        shape_datasets = [ds.samples.shape for ds in datasets]
         
-        if not all(x==shape_datasets[0] for x in shape_datasets):
-            raise ValueError('the shapes of datasets are different')
+        if isinstance(datasets):
+            #Implement having list without datasets structure
+            shape_datasets = [ds.samples.shape for ds in datasets]
         
-        row, col = datasets[0].samples.shape
+            if not all(x==shape_datasets[0] for x in shape_datasets):
+                raise ValueError('the shapes of datasets are different')
         
+            row, col = datasets[0].samples.shape
+            datas = [dt.samples for dt in datasets]
+         
+        if isinstance(datasets):
+            #Implement having list without datasets structure
+            shape_datasets = [ds.shape for ds in datasets]
+        
+            if not all(x==shape_datasets[0] for x in shape_datasets):
+                raise ValueError('the shapes of datasets are different')
+        
+            row, col = datasets[0].shape
+            datas = datasets
+            
         count = 0
         dist = []
         dist.append(np.inf)
-        datas = [dt.samples for dt in datasets]
+        
         datas_centered = [d - np.mean(d, 0) for d in datas]
         
         norms = [np.linalg.norm(dce) for dce in datas_centered]
