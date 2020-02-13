@@ -35,7 +35,7 @@ Setup your path:
 ```python
 os.chdir('your_path_where_priorGPA.py_is')
 ```
-Then, load the datasets that must be [datasets from PyMVPA](http://www.pymvpa.org/tutorial_datasets.html?highlight=datasets) or a np.ndarray. You need to rename your data as sub-x, where x goes from 01 to the last index of your subject that we will call idxmax.
+The data are composed by nii images (one for each subject), preprocessed by FSL, Matlab and so on. You need to rename your data as sub-x, where x goes from 01 to the last index of your subject that we will call idxmax.
 
 ```python
 path = "path_where_your_data_are"
