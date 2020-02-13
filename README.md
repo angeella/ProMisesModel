@@ -96,3 +96,4 @@ for ds in range(len(out)):
 ```
 That's it! You can use these aligned brain images in FSL, Matlab etc to perform between subject analysis :)
 
+If you want to compare the results using the [Hyperalignment](https://www.sciencedirect.com/science/article/pii/S0896627311007811?via%3Dihub) method, you can check the [tutorial](http://www.pymvpa.org/examples/hyperalignment.html) from the PyMVPA package.
