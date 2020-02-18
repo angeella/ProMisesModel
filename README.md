@@ -71,17 +71,46 @@ for ds in range(len(img)):
 nsubjs = len(img)
 ```
 
+Then, we apply the Generalized Procrustes analysis with prior distribution, using as prior information the three-dimensional coordinates of the voxels. At first, we create the similarity euclidean matrix called $Q$:
+
 ```python
 coord = img[0].fa.voxel_indices
 dist = distance.cdist(np.array(coord), np.array(coord), "euclidean")
 Q = np.exp(-dist)
-hyper = priorGPA(maxIt = 10, t = 0.001, k = 2, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+```
+Then, we need to tune the concentration hyperparameter $k$ of the Fisher Von Mises prior distribution:
+
+```python
+logSum = []
+nOO = []
+
+for k in range(len(kval)):
+    for ns in range(nsubjs):            
+        nLogic = [np.unique(sd[0].sa['subject'].value)[0]!=ns for sd in img]
+        for i in range(nsubjs):
+            if nLogic[i]:
+                nOO.append(i)
+        ds_LOO = [img_Right[i] for i in nOO]
+        hyper = priorHyA(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+        hypmaps = hyper.gpaSub(datasets=ds_LOO)
+        R = hypmaps[2]
+        Xest = hypmaps[0]
+        M = hypmaps[4]
+        log = -np.sum([np.linalg.norm(x- M, ord = 'fro') for x in Xest])
+        
+    logSum.append(log)    
+
+logSumK = zip(kval,logSum)
+khat = min(logSumK, key = lambda t: t[1])[0]
+ 
+hyper = priorGPA(maxIt = 10, t = 0.001, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
 
 hypmaps = hyper.gpaSub(datasets=img)
 
 Xest = hypmaps[0]
 ```
-So, we have our aligned brain images! Let's save it as nii file:
+
+So, we have our aligned brain images called Xest! Let's save it as nii file:
 
 ```python
 out = img
