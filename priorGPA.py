@@ -137,7 +137,7 @@ class priorGPA(ClassWithCollections):
         reflection = self.reflection
         subj = self.subj
         
-        if isinstance(datasets):
+        if isinstance(datasets,mvpa2.datasets.base.Dataset):
             #Implement having list without datasets structure
             shape_datasets = [ds.samples.shape for ds in datasets]
         
@@ -147,7 +147,7 @@ class priorGPA(ClassWithCollections):
             row, col = datasets[0].samples.shape
             datas = [dt.samples for dt in datasets]
          
-        if not isinstance(datasets):
+        if not isinstance(datasets,mvpa2.datasets.base.Dataset):
             #Implement having list without datasets structure
             shape_datasets = [ds.shape for ds in datasets]
         
