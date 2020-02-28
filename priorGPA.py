@@ -1,6 +1,4 @@
 
-#!/usr/bin/env python
-
 """
 Perform hyperaligment with prior. The modification is in the SVD in the procustean problem.
 We decompose X_i M + k Q instead of X_i M.
