@@ -207,6 +207,6 @@ __version__ = '0.1'
 if __name__ == '__main__':
     # test1.py executed as script
     # do something
-    priorHyA()    
+    priorGPA()    
     
     
