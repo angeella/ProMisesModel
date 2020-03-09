@@ -11,9 +11,10 @@ Let's start with this short tutorial to understand easily how apply this functio
 
 First of all, you need to install Python, and the PyMVPA, decimal, math, multiprocessing, nibabel, scipy, pydicom, nilearn, dipy, pickle packages. If it is your first time with Python, you can see my [repository](https://github.com/angeella/Python_Tutorial) where I explain how install packages, how manage Anaconda and so on.
 
-So, you need to download the script [priorGPA.py](https://github.com/angeella/priorGPA/blob/master/priorGPA.py) and put on the folder where you are working. 
+So, you need to download the script [priorGPA.py](https://github.com/angeella/priorGPA/blob/master/priorGPA.py) and put on the folder where you are working. You must name the script [priorGPA.py](https://github.com/angeella/priorGPA/blob/master/priorGPA.py) as **priorGPA.py**.
 
-After the installation, you need to import the packages:
+After the installation of the packages in Anaconda, you need to import the packages:
+
 ```python
 import numpy as np
 import mvpa2
@@ -33,18 +34,26 @@ import pickle
 Setup your path:
 
 ```python
-os.chdir('your_path_where_priorGPA.py_is')
+os.chdir('put_your_path_where_priorGPA.py_is')
 ```
-The data are composed by nii images (one for each subject), preprocessed by FSL, Matlab and so on. You need to rename your data as sub-x, where x goes from 01 to the last index of your subject that we will call idxmax.
+import the function **priorGPA.py**:
 
 ```python
-path = "path_where_your_data_are"
-idx = np.hstack([ '0'+ str(x) for x in range(1,idxmax)])
+from priorGPA import gpaSub
+```
+So, we need to import our data. The data are composed by nii images (one for each subject), preprocessed by FSL, or Matlab, etc. You need to rename your data as sub-x, where x goes from 01 to the last index of your subject that we will call ```idxmax```. Also, you need to set your ```path```, where the priorGPA.py file is. Also, in the same folder where your data are and where the priorGPA.py file is, you must put the mask named ```mask``` as nifti files. If you want to learn how produce a mask using FSL, please refers to this simple [tutorial](https://www.youtube.com/watch?v=fIu4tUjRfUE).
+
+So, you need to modify the first two lines of this first part of code:
+
+```python
+path = "path_where_your_data_are"   #Here you set your path, finish it with /
+idxmax = #Here you must put the last numeric index of your set of subjects
+idx = np.hstack([ '0'+ str(x) for x in range(1,idxmax)]) 
 
 img_dt = []
 for ds in range(len(idx)):
     img_o = nib.load(path + str(idx[ds]) + '.nii.gz')
-    mask_img = nib.load(path + 'your_mask.nii.gz')
+    mask_img = nib.load(path + 'mask.nii.gz')
     #affine = mask_img.affine
     affine = img_o.affine
     img_o.header.get_zooms()
@@ -56,7 +65,7 @@ for ds in range(len(idx)):
     mask = nib.Nifti1Image(mask, mask_affine)
     img_dt.append(mvpa2.datasets.mri.fmri_dataset(img_o, mask = mask))  
 ```
-Some preprocessing steps:
+Then, we perform some preprocessing steps:
 
 ```python
 # inject the subject ID into all datasets
@@ -110,7 +119,7 @@ hypmaps = hyper.gpaSub(datasets=img)
 Xest = hypmaps[0]
 ```
 
-So, we have our aligned brain images called Xest! Let's save it as nii file:
+So, we have our aligned brain images called ```Xest```! Let's save it as nii file:
 
 ```python
 out = img
@@ -126,3 +135,9 @@ for ds in range(len(out)):
 That's it! You can use these aligned brain images in FSL, Matlab etc to perform between subject analysis :)
 
 If you want to compare the results using the [Hyperalignment](https://www.sciencedirect.com/science/article/pii/S0896627311007811?via%3Dihub) method, you can check the [tutorial](http://www.pymvpa.org/examples/hyperalignment.html) from the PyMVPA package.
+
+
+# Did you find some bugs?
+
+Please write to angela.andreella[\at]stat[\dot]unipd[\dot]it or insert a reproducible example using [reprex](https://github.com/tidyverse/reprex) on my [issue github page](https://github.com/angeella/priorGPA/issues).
+
