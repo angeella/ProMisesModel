@@ -1,10 +1,3 @@
-
-"""
-Perform hyperaligment with prior. The modification is in the SVD in the procustean problem.
-We decompose X_i M + k Q instead of X_i M.
-"""
-
-#Import mvpa2 package
 import numpy as np
 import mvpa2
 #import scipy as syp
@@ -18,7 +11,11 @@ import decimal as dc
 #context.prec = 55
 import math
 import multiprocessing as mp
-
+from mvpa2.algorithms.hyperalignment import ClassWithCollections
+from mvpa2.algorithms.group_clusterthr import EnsureInt 
+from mvpa2.algorithms.group_clusterthr import Parameter
+from mvpa2.algorithms.group_clusterthr import EnsureRange
+ 
 __all__= ['priorGPA'] #explicitly exports the symbols priorHyA
 
 #Main function that will be Parallelize
@@ -86,8 +83,7 @@ class priorGPA(ClassWithCollections):
     #chosen_ref_ds = mvpa2.ConditionalAttribute(enabled=True,
             #doc="""Index of the input dataset used as 1st-level reference dataset.""")
     
-    maxIt = Parameter(5, constraints=EnsureInt() & EnsureRange(min=0)),
-            doc=""" maximum number of iteration used in the Generalised Procrustes Analysis """)
+    maxIt = Parameter(5, constraints=EnsureInt() & EnsureRange(min=0),doc=""" maximum number of iteration used in the Generalised Procrustes Analysis """)
     
     t = Parameter(1, constraints= EnsureRange(min=0), doc=""" the threshold value to be reached as the minimum relative reduction between the matrices """)
     
@@ -95,7 +91,7 @@ class priorGPA(ClassWithCollections):
     
     Q = Parameter(0, doc=""" value of the location parameter of the prior distribution. It has dimension voxels x voxels, it could be not symmetric. """)
     
-    ref_ds = mvpa2.Parameter(None, doc=""" index starting matrix to align """)
+    ref_ds = Parameter(None, doc=""" index starting matrix to align """)
     
     scaling = Parameter(True, constraints='bool',
               doc="""Flag to apply scaling transformation""")
@@ -207,6 +203,4 @@ __version__ = '0.1'
 if __name__ == '__main__':
     # test1.py executed as script
     # do something
-    priorGPA()    
-    
-    
+    priorGPA()   
