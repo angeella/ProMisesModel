@@ -7,10 +7,10 @@ import numpy as np
 import mvpa2
 from mvpa2.suite import *
 import os
-os.chdir('C:/Users/Angela Andreella/Documents/Thesis_Doc/Hyperaligment/Computation/Test')
-from priorGPA import priorGPA
+os.chdir('C:/Users/Angela Andreella/Documents/GitHub/priorGPA')
+from priorGPA import gpaSub
 #Load dataset
-ds_all = h5load('//dartfs-hpc/rc/home/w/f003vpw/ObjectAnalysis/data/hyperalignment_tutorial_data_2.4.hdf5.gz')
+ds_all = h5load('hyperalignment_tutorial_data_2.4.hdf5.gz')
 #Number of voxels to select
 nf = 80
 # Automatic feature selection

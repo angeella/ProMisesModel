@@ -101,7 +101,7 @@ for k in range(len(kval)):
                 nOO.append(i)
         ds_LOO = [img_Right[i] for i in nOO]
         hyper = priorHyA(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
-        hypmaps = hyper.gpaSub(datasets=ds_LOO)
+        hypmaps = hyper.gpa(datasets=ds_LOO)
         R = hypmaps[2]
         Xest = hypmaps[0]
         M = hypmaps[4]
