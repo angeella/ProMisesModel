@@ -1,9 +1,9 @@
-# Generalized Procrustes Analysis with Prior Information
+# Fisher-Procrustes model
 [![DOI](https://zenodo.org/badge/224435643.svg)](https://zenodo.org/badge/latestdoi/224435643)
 
 The method is implemented in Python according to the [PyMVPA](http://www.pymvpa.org/index.html) (MultiVariate Pattern Analysis in Python) package. 
 
-First of all, the Generalized Procrustes Analysis with Prior information, i.e. spatial anatomical brain information, allows to improve the between-subject analysis in fMRI data. It is a useful functional alignment to perfom if someone want to analyze a set of subject. It must be used after data preprocessing, as motion correction, anatomical alignment and so on. The method is computationally heavy, at the moment, for that we recommend to use a mask from FSL, Matlab or other software. The mask must be used without falling into the double dipping problem. So, you must choose the mask before seeing the data, having some prior knowledge about the correlation between the region of interest and the type of task-design activation.
+First of all, the **Fisher-Procrustes model** could be describe as the Generalized Procrustes Analysis with Prior information, i.e. spatial anatomical brain information, allows to improve the between-subject analysis in fMRI data. It is a useful functional alignment to perfom if someone want to analyze a set of subject. It must be used after data preprocessing, as motion correction, anatomical alignment and so on. The method is computationally heavy, at the moment, for that we recommend to use a mask from FSL, Matlab or other software. The mask must be used without falling into the double dipping problem. So, you must choose the mask before seeing the data, having some prior knowledge about the correlation between the region of interest and the type of task-design activation.
 
 We are working also on a new method that permits to align the whole brain, so.. stay tuned! :)
 
