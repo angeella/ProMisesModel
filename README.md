@@ -1,5 +1,5 @@
 # Generalized Procrustes Analysis with Prior Information
-DOI: 10.5281/zenodo.3629269
+[![DOI](https://zenodo.org/badge/224435643.svg)](https://zenodo.org/badge/latestdoi/224435643)
 
 The method is implemented in Python according to the [PyMVPA](http://www.pymvpa.org/index.html) (MultiVariate Pattern Analysis in Python) package. 
 
