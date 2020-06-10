@@ -8,7 +8,7 @@ from mvpa2.suite import *
 #if __debug__:
 #    from mvpa2.base import debug
 import os
-os.chdir('//dartfs-hpc/rc/home/w/f003vpw/AuditoryData')
+os.chdir('//dartfs-hpc/rc/home/w/f003vpw/AuditoryData') #your path
 from priorGPA_parallel import priorHyA
 #import pickle
 #from function import distance_pairwise
@@ -105,7 +105,9 @@ for ds in range(len(idx)):
 #    img_Left[ds].a['imgtype'] = img[ds].a['imgtype']
 #   img_Left[ds].a['voxel_dim'] = img[ds].a['voxel_dim']
 
+#####################################################################################################
 #######################################Hyperalignment#######################################
+#####################################################################################################
 
 hyper = Hyperalignment()
 hypmaps = hyper(img_Right)
@@ -137,11 +139,9 @@ for ds in range(len(out)):
 #  img2 = nib.nifti1.Nifti1Image(data2, affine2)
   nib.save(nimg, path + 'sub-' + str(idx[ds]) + 'STG_Hyper.nii.gz')
 
-
-#######################################GPA#######################################
-
-
-#Using gpa 
+#####################################################################################################
+#######################################GPA##############################################################################
+#####################################################################################################
 
 hyper = priorHyA(maxIt = 10, t = 0.001, k = 0, Q = None, ref_ds = None,  scaling=True, reflection = True, subj=False)
     
@@ -175,9 +175,9 @@ for ds in range(len(out)):
 #  img2 = nib.nifti1.Nifti1Image(data2, affine2)
   nib.save(nimg, path + 'sub-' + str(idx[ds]) + 'STG_GPA.nii.gz')
 
-
+#####################################################################################################
 ###############################################GPA PRIOR###############################################
-
+#####################################################################################################
 
 kval =  np.arange(101)
 
@@ -205,7 +205,6 @@ for k in range(len(kval)):
 
 logSumK = zip(kval,logSum)
 khat = min(logSumK, key = lambda t: t[1])[0]
-
 
 
 hyper = priorHyA(maxIt = 10, t = 0.01, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
@@ -263,4 +262,4 @@ for ds in range(len(out)):
 #  new_zooms = (2., 2., 2.)
 #  data2, affine2 = reslice(data, affine, zooms, new_zooms)
 #  img2 = nib.nifti1.Nifti1Image(data2, affine2)
-  nib.save(nimg, path + 'sub-' + str(idx[ds]) + 'STG_GPAprior1_CV.nii.gz')
+  nib.save(nimg, path + 'sub-' + str(idx[ds]) + 'STG_vMFP.nii.gz')

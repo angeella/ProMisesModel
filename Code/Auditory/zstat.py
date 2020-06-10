@@ -464,19 +464,6 @@ plotting.plot_stat_map(Tstat_img,
                            output_file = in_path + "/out/zstat3Tstat_noAlignment.pdf",
                            cut_coords = [-55,-30,-4])
 
-##########################################SOME INDEX##################################################
-
-np.mean(Pvalues_real_3> Pvalues_gpaPrior1_3) #0.8584970194468875
-np.mean(Pvalues_hyp_3> Pvalues_gpaPrior1_3) #0.7029219192807583
-np.mean(Pvalues_hyp_3> Pvalues_gpaPrior3_3) #0.5845793022574025
-np.mean(Pvalues_gpa_3> Pvalues_gpaPrior3_3) #0.6444835336655917
-np.mean(Pvalues_gpa_3> Pvalues_gpaPrior1_3) #0.8081696472197791
-
-
-np.mean(abs(Tstat_hyp_3) < abs(Tstat_gpaPrior1_3)) #0.7029219192807583
-np.mean(abs(Tstat_gpa_3) < abs(Tstat_gpaPrior1_3)) #0.8081696472197791
-np.mean(abs(Tstat_real_3) < abs(Tstat_gpaPrior1_3)) #0.8584970194468875
-
 
 ##########################################PLOT log(p)##################################################
 
