@@ -100,7 +100,7 @@ gpa, hypmaps0, distH0, traceH0 = timesegments_classification(dss, hyper = 'gpa',
 #We selected 5 type of Q: mds, Dijkstra, euclidean, cosine, cityblock, mean
 
 #kval = np.hstack([np.linspace(start=0, stop=100, num=20,dtype=int)] + [np.linspace(start=100, stop=10000, num=10,dtype=int)])
-kval =  np.linspace(start=0.1, stop=20, num=10,dtype=float)
+kval =  np.linspace(start=0.1, stop=100, num=100,dtype=float)
 
 
 n = float(coord.shape[0])

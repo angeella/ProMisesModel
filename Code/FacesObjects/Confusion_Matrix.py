@@ -13,7 +13,6 @@ data.files
 cm_mean = np.mean(data["cm_mean"], axis = 0)
 cm_mean = data["cm_mean"][53]
 
-
 nrows = 1
 ncols = 4
 fig = plt.figure(figsize=(85, 85))

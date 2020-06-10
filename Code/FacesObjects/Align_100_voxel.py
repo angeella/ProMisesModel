@@ -5,8 +5,6 @@ Final analysis Object Analysis.
 Features selection different for each subjects.
 In order to select the best model, the parameter k, we use the Nested Cross Validation method
 
-where d is an indicator of the effective number of parameters in the model.
-
 The dataset is the same use in Haxby 2011, Object visualization recognization in ventral temporal cortex.
 
 """
@@ -224,7 +222,7 @@ np.savez('/dartfs-hpc/rc/home/w/f003vpw/ObjectAnalysis/Output/fs_cv_100_GPA_S.np
          mean_gpa0_results = mean_gpa0_results, 
          gpa_time = gpa_time)
 
-kval =  np.linspace(start=0.1, stop=10, num=5,dtype=float)
+kval =  np.linspace(start=0.1, stop=100, num=100,dtype=float)
 
 ##############GPA with euclidean kernel F###############
 
