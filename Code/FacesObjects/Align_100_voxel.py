@@ -155,7 +155,8 @@ while i<101:
 #   
 hyper_time = time.time() - hyper_start_time
 #
-
+np.savez('out_hyp.npz', 
+         out = out)
 
 """
 We use Generalized Orthogonal Procrustes Analysis to align data, to avoid circularity problem we perform leave-one-out in runs.
@@ -210,6 +211,8 @@ mean_gpa0_results = np.mean(bsc_gpa0_results)
 
 tracegpa = np.mean(traceGPA, axis = 0)
 
+np.savez('out_gpa.npz', 
+         mean_gpa0_results = mean_gpa0_results)
 
 kval =  np.linspace(start=0.1, stop=100, num=100,dtype=float)
 
@@ -300,4 +303,5 @@ mean_gpaE_results = np.mean(bsc_gpaE_results)
 
 tracegpaprior = np.mean(traceGPAprior, axis = 0)
 
-
+np.savez('out_vMFPmodel.npz', 
+         mean_gpaE_results = mean_gpaE_results)
