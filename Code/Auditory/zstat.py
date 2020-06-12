@@ -11,9 +11,9 @@ from scipy import stats
 import matplotlib as mpl
 #Read data
 
-in_path = "C:/Users/Angela Andreella/Documents/Thesis_Doc/Hyperaligment/Computation/AuditoryData/"
+in_path = "C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel/Data/AuditoryData"
 
-mask = nib.load(in_path + "Pvalues/STG/mask_Superior_Temporal_Gyrus.nii.gz")
+mask = nib.load(in_path + "/mask_Superior_Temporal_Gyrus.nii.gz")
 maskdata = mask.get_fdata()
 maskdata = np.reshape(maskdata, (902629))
 
@@ -26,7 +26,7 @@ maskdata = np.reshape(maskdata, (902629))
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "Pvalues/STG/Vocal/GPA/sub-" + str(i) + "zstat1.nii.gz").get_fdata()
+    img = nib.load(in_path + "out/STG/Vocal/GPA/sub-" + str(i) + "zstat1.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
   
@@ -67,7 +67,7 @@ plotting.plot_stat_map(Pvalues_img,
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "Pvalues/STG/Vocal_NoVocal/GPA/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
+    img = nib.load(in_path + "out/STG/Vocal_NoVocal/GPA/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
   
@@ -135,7 +135,7 @@ plotting.plot_stat_map(Pvalues_img, cmap = 'ocean_hot',
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "Pvalues/STG/Vocal_NoVocal/GPA/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
+    img = nib.load(in_path + "out/STG/Vocal_NoVocal/GPA/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
   
@@ -205,7 +205,7 @@ plotting.plot_stat_map(Tstat_rand_img,
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "Pvalues/STG/Vocal/Hyper/sub-" + str(i) + "zstat1.nii.gz").get_fdata()
+    img = nib.load(in_path + "out/STG/Vocal/Hyper/sub-" + str(i) + "zstat1.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
   
@@ -246,7 +246,7 @@ plotting.plot_stat_map(Pvalues_img,colorbar=True,
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "Pvalues/STG/Vocal_NoVocal/Hyper/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
+    img = nib.load(in_path + "out/STG/Vocal_NoVocal/Hyper/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
   
@@ -321,7 +321,7 @@ plotting.plot_stat_map(Tstat_img,
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "Pvalues/STG/Vocal/GPAprior/sub-" + str(i) + "zstat1.nii.gz").get_fdata()
+    img = nib.load(in_path + "out/STG/Vocal/vMFPmodel/sub-" + str(i) + "zstat1.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
   
@@ -354,7 +354,7 @@ Pvalues_img = nib.Nifti1Image(Pvalues1, affine=[[  -2.,    0.,    0.,   90.],
 
 plotting.plot_stat_map(Pvalues_img,
                            title = "von Mises-Fisher Procrustes model Vocal",
-                           output_file = in_path + "/out/zstat1_gpaPrior.pdf",
+                           output_file = in_path + "/out/zstat1_vMFPmodel.pdf",
                            cut_coords = [-59,-23,-3])
 
 #zstat3
@@ -362,7 +362,7 @@ plotting.plot_stat_map(Pvalues_img,
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "Pvalues/STG/Vocal_NoVocal/GPAprior/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
+    img = nib.load(in_path + "out/STG/Vocal_NoVocal/vMFPmodel/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
   
@@ -394,7 +394,7 @@ Pvalues_img = nib.Nifti1Image(Pvalues1, affine=[[  -2.,    0.,    0.,   90.],
     
 plotting.plot_stat_map(Pvalues_img,
                            title = "von Mises-Fisher Procrustes model Vocal - NoVocal",
-                           output_file = in_path + "/out/zstat3_gpaPrior.pdf",
+                           output_file = in_path + "/out/zstat3_vMFPmodel.pdf",
                            cut_coords = [-55,-30,-4])
 
 
@@ -404,7 +404,7 @@ plotting.plot_stat_map(Pvalues_img,
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "Pvalues/STG/Vocal_NoVocal/NoAlign/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
+    img = nib.load(in_path + "out/STG/Vocal_NoVocal/NoAlign/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
 

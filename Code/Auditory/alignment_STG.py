@@ -8,8 +8,8 @@ from mvpa2.suite import *
 #if __debug__:
 #    from mvpa2.base import debug
 import os
-os.chdir('//dartfs-hpc/rc/home/w/f003vpw/AuditoryData') #your path
-from priorGPA_parallel import priorHyA
+os.chdir('C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel') #your path
+from vMFPmodel import vMFPmodel
 #import pickle
 #from function import distance_pairwise
 import nibabel as nib
@@ -26,7 +26,7 @@ from nilearn.input_data import NiftiMasker
 from dipy.align.reslice import reslice
 import mvpa2.base.hdf5 as hd
 
-path = "//dartfs-hpc/rc/home/w/f003vpw/AuditoryData/Data/"
+path = "C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel/Data/Auditory"
 idx = np.hstack(['021',[ '0'+ str(x) for x in range(23,32)], [ '0'+ str(x) for x in range(33,41)]])
 
 #img_dt = []
@@ -143,7 +143,7 @@ for ds in range(len(out)):
 #######################################GPA##############################################################################
 #####################################################################################################
 
-hyper = priorHyA(maxIt = 10, t = 0.001, k = 0, Q = None, ref_ds = None,  scaling=True, reflection = True, subj=False)
+hyper = vMFPmodel(maxIt = 10, t = 0.001, k = 0, Q = None, ref_ds = None,  scaling=True, reflection = True, subj=False)
     
 hypmaps = hyper.gpa(datasets=img_Right)
 
@@ -151,7 +151,7 @@ R = hypmaps[2]
 X = [h.samples for h in img_Right]
 Xest_Right = [np.dot(x,r) for x,r in zip(X,R)]
 
-hyper = priorHyA(maxIt = 10, t = 0.001, k = 0, Q = None, ref_ds = None,  scaling=True, reflection = True, subj=False)
+hyper = vMFPmodel(maxIt = 10, t = 0.001, k = 0, Q = None, ref_ds = None,  scaling=True, reflection = True, subj=False)
 
 hypmaps = hyper.gpa(datasets=img_Left)
 
@@ -194,7 +194,7 @@ for k in range(len(kval)):
             if nLogic[i]:
                 nOO.append(i)
         ds_LOO = [img_Right[i] for i in nOO]
-        hyper = priorHyA(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+        hyper = vMFPmodel(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
         hypmaps = hyper.gpa(datasets=ds_LOO)
         R = hypmaps[2]
         Xest = hypmaps[0]
@@ -207,7 +207,7 @@ logSumK = zip(kval,logSum)
 khat = min(logSumK, key = lambda t: t[1])[0]
 
 
-hyper = priorHyA(maxIt = 10, t = 0.01, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+hyper = vMFPmodel(maxIt = 10, t = 0.01, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
 hypmaps = hyper.gpa(datasets=img_Right)        
 Xest_Right = [h.forward(sd) for h, sd in zip(hypmaps[1], img_Right)]
 distHprior = distance_pairwise(Xest_Right)
@@ -228,7 +228,7 @@ for k in range(len(kval)):
             if nLogic[i]:
                 nOO.append(i)
         ds_LOO = [img_Right[i] for i in nOO]
-        hyper = priorHyA(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+        hyper = vMFPmodel(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
         hypmaps = hyper.gpa(datasets=ds_LOO)
         R = hypmaps[2]
         Xest = hypmaps[0]
@@ -240,7 +240,7 @@ for k in range(len(kval)):
 logSumK = zip(kval,logSum)
 khat = min(logSumK, key = lambda t: t[1])[0]
 
-hyper = priorHyA(maxIt = 10, t = 0.01, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+hyper = vMFPmodel(maxIt = 10, t = 0.01, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
 hypmaps = hyper.gpa(datasets=img_Left)        
 Xest_Left = [h.forward(sd) for h, sd in zip(hypmaps[1], img_Left)]
 distHprior = distance_pairwise(Xest_Left)

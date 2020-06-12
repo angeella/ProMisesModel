@@ -11,7 +11,7 @@ Let's start with this short tutorial to understand easily how apply this functio
 
 First of all, you need to install Python, and the PyMVPA, decimal, math, multiprocessing, nibabel, scipy, pydicom, nilearn, dipy, pickle packages. If it is your first time with Python, you can see my [repository](https://github.com/angeella/Python_Tutorial) where I explain how install packages, how manage Anaconda and so on.
 
-So, you need to download the script [priorGPA.py](https://github.com/angeella/priorGPA/blob/master/priorGPA.py) and put on the folder where you are working. You must name the script [priorGPA.py](https://github.com/angeella/priorGPA/blob/master/priorGPA.py) as **priorGPA.py**.
+So, you need to download the script [vMFPmodel.py](https://github.com/angeella/vMFPmodel/blob/master/vMFPmodel.py) and put on the folder where you are working. You must name the script [vMFPmodel.py](https://github.com/angeella/vMFPmodel/blob/master/vMFPmodel.py) as **vMFPmodel.py**.
 
 After the installation of the packages in Anaconda, you need to import the packages:
 
@@ -34,14 +34,14 @@ import pickle
 Setup your path:
 
 ```python
-os.chdir('put_your_path_where_priorGPA.py_is')
+os.chdir('put_your_path_where_vMFPmodel.py_is')
 ```
-import the function **priorGPA.py**:
+import the function **vMFPmodel.py**:
 
 ```python
-from priorGPA import gpaSub
+from vMFPmodel import vMFPmodel
 ```
-So, we need to import our data. The data are composed by nii images (one for each subject), preprocessed by FSL, or Matlab, etc. You need to rename your data as sub-x, where x goes from 01 to the last index of your subject that we will call ```idxmax```. Also, you need to set your ```path```, where the priorGPA.py file is. Also, in the same folder where your data are and where the priorGPA.py file is, you must put the mask named ```mask``` as nifti files. If you want to learn how produce a mask using FSL, please refers to this simple [tutorial](https://www.youtube.com/watch?v=fIu4tUjRfUE).
+So, we need to import our data. The data are composed by nii images (one for each subject), preprocessed by FSL, or Matlab, etc. You need to rename your data as sub-x, where x goes from 01 to the last index of your subject that we will call ```idxmax```. Also, you need to set your ```path```, where the vMFPmodel.py file is. Also, in the same folder where your data are and where the vMFPmodel.py file is, you must put the mask named ```mask``` as nifti files. If you want to learn how produce a mask using FSL, please refers to this simple [tutorial](https://www.youtube.com/watch?v=fIu4tUjRfUE).
 
 So, you need to modify the first two lines of this first part of code:
 
@@ -100,7 +100,7 @@ for k in range(len(kval)):
             if nLogic[i]:
                 nOO.append(i)
         ds_LOO = [img_Right[i] for i in nOO]
-        hyper = priorHyA(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+        hyper = vMFPmodel(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
         hypmaps = hyper.gpa(datasets=ds_LOO)
         R = hypmaps[2]
         Xest = hypmaps[0]
@@ -112,9 +112,9 @@ for k in range(len(kval)):
 logSumK = zip(kval,logSum)
 khat = min(logSumK, key = lambda t: t[1])[0]
  
-hyper = priorGPA(maxIt = 10, t = 0.001, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+hyper = vMFPmodel(maxIt = 10, t = 0.001, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
 
-hypmaps = hyper.gpaSub(datasets=img)
+hypmaps = hyper.gpa(datasets=img)
 
 Xest = hypmaps[0]
 ```
@@ -130,7 +130,7 @@ for ds in range(len(out)):
     
 for ds in range(len(out)):
   nimg = mvpa2.datasets.mri.map2nifti(out[ds])
-  nib.save(nimg, path + 'sub-' + str(idx[ds]) + 'GPAprior_align.nii.gz')
+  nib.save(nimg, path + 'sub-' + str(idx[ds]) + 'vMFPmodel_align.nii.gz')
 ```
 That's it! You can use these aligned brain images in FSL, Matlab etc to perform between subject analysis :)
 
@@ -139,5 +139,5 @@ If you want to compare the results using the [Hyperalignment](https://www.scienc
 
 # Did you find some bugs?
 
-Please write to angela.andreella[\at]stat[\dot]unipd[\dot]it or insert a reproducible example using [reprex](https://github.com/tidyverse/reprex) on my [issue github page](https://github.com/angeella/priorGPA/issues).
+Please write to angela.andreella[\at]stat[\dot]unipd[\dot]it or insert a reproducible example using [reprex](https://github.com/tidyverse/reprex) on my [issue github page](https://github.com/angeella/vMFPmodel/issues).
 
