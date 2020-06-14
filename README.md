@@ -6,7 +6,7 @@ In this repository, you can find
   2. The code used for the between-subjects classification of the [Faces and Objects data](http://www.pymvpa.org/datadb/hyperalignment_tutorial_data.html) (Code/FacesObjects);
   3. The code used for the between-subjects classification of the [Raiders data](https://github.com/HaxbyLab/raiders_data) (Code/Raiders);
   4. The code used for the group level inference analysis of the [Auditory data](https://openneuro.org/datasets/ds000158/versions/1.0.0) (Code/Auditory);
-  5. The main function describing the von Mises-Fisher-Procrustes model (priorGPA.py)
+  5. The main function describing the von Mises-Fisher-Procrustes model (vMFPmodel.py)
 
 
 # Did you find some bugs?
