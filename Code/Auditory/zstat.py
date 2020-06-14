@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Maps p values
 
@@ -11,7 +10,7 @@ from scipy import stats
 import matplotlib as mpl
 #Read data
 
-in_path = "C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel/Data/AuditoryData"
+in_path = "C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel/Data/Auditory"
 
 mask = nib.load(in_path + "/mask_Superior_Temporal_Gyrus.nii.gz")
 maskdata = mask.get_fdata()
@@ -26,7 +25,7 @@ maskdata = np.reshape(maskdata, (902629))
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "out/STG/Vocal/GPA/sub-" + str(i) + "zstat1.nii.gz").get_fdata()
+    img = nib.load(in_path + "/Zstat_aligned/GPA/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
   
@@ -36,7 +35,7 @@ n = scores.shape[1]
 Tstat = scores.mean(axis=1, dtype =np.float64)/(scores.std(axis=1, dtype =np.float64, ddof=0) +1e-12 /np.sqrt(n))
 
 Pvalues = 2*(1-stats.norm.cdf(np.abs(Tstat))) 
-Pvalues_gpa_1 = Pvalues
+Pvalues_gpa = Pvalues
 
 #Tstat = np.sum(scores,axis=1)/np.sqrt(n)
 
@@ -58,51 +57,35 @@ Pvalues_img = nib.Nifti1Image(Pvalues1, affine=[[  -2.,    0.,    0.,   90.],
                                            [   0.,    0.,    0.,    1.]])
 
 plotting.plot_stat_map(Pvalues_img,
-                           title = "GPA Vocal",
-                           output_file = in_path + "/out/zstat1_gpa.pdf",
-                           cut_coords = [-59,-23,-3])
-
-#zstat3
-
-scores = np.zeros((10233,18)) 
-
-for i in range(1, 18):
-    img = nib.load(in_path + "out/STG/Vocal_NoVocal/GPA/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
-    img = np.reshape(img, (902629))[maskdata==1]
-    scores[:,i] = img
-  
-scores.shape    
-n = scores.shape[1]
-
-Tstat = scores.mean(axis=1, dtype =np.float64)/(scores.std(axis=1, dtype =np.float64, ddof=0) +1e-12 /np.sqrt(n))
-
-Pvalues = 2*(1-stats.norm.cdf(np.abs(Tstat))) 
-Pvalues_gpa_3 = Pvalues
-
-Pvalues_rand = np.random.permutation(Pvalues)
-
-#Tstat = np.sum(scores,axis=1)/np.sqrt(n)
-
-Pvalues1 = np.copy(maskdata)
-j = 0
-for i in range(902629):
-    if Pvalues1[i] == 1:
-            Pvalues1[i] = Pvalues[j]
-            j = j + 1
-    else:
-       Pvalues1[i] = np.nan 
-        
-
-Pvalues1 = np.reshape(Pvalues1,(91,109,91))
-
-Pvalues_img = nib.Nifti1Image(Pvalues1, affine=[[  -2.,    0.,    0.,   90.],
-                                           [   0.,    2.,    0., -126.],
-                                           [   0.,    0.,    2.,  -72.],
-                                           [   0.,    0.,    0.,    1.]])
-
-plotting.plot_stat_map(Pvalues_img,
-                           title = "GPA Vocal - NoVocal",
+                           title = "GPA Vocal  - NoVocal",
                            output_file = in_path + "/out/zstat3_gpa.pdf",
+                           cut_coords = [-55,-30,-4])
+
+
+Tstat_hyp = Tstat
+
+#Tstat = np.sum(scores,axis=1)/np.sqrt(n)
+
+Tstat1 = np.copy(maskdata)
+j = 0
+for i in range(902629):
+    if Tstat1[i] == 1:
+            Tstat1[i] = Tstat[j]
+            j = j + 1
+    else:
+       Tstat1[i] = np.nan 
+        
+
+Tstat1 = np.reshape(Tstat1,(91,109,91))
+
+Tstat_img = nib.Nifti1Image(Tstat1, affine=[[  -2.,    0.,    0.,   90.],
+                                           [   0.,    2.,    0., -126.],
+                                           [   0.,    0.,    2.,  -72.],
+                                           [   0.,    0.,    0.,    1.]])
+
+plotting.plot_stat_map(Tstat_img, 
+                           title = "GPA Vocal - NoVocal",
+                           output_file = in_path + "/out/zstat3Tstat_gpa.pdf",
                            cut_coords = [-55,-30,-4])
 
 
@@ -130,72 +113,6 @@ plotting.plot_stat_map(Pvalues_img, cmap = 'ocean_hot',
                            cut_coords = [-55,-30,-4])
 
 
-#zstat3 Test
-
-scores = np.zeros((10233,18)) 
-
-for i in range(1, 18):
-    img = nib.load(in_path + "out/STG/Vocal_NoVocal/GPA/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
-    img = np.reshape(img, (902629))[maskdata==1]
-    scores[:,i] = img
-  
-scores.shape    
-n = scores.shape[1]
-
-Tstat = scores.mean(axis=1, dtype =np.float64)/(scores.std(axis=1, dtype =np.float64, ddof=0) +1e-12 /np.sqrt(n))
-
-Tstat_gpa_3 = Tstat
-
-Tstat_rand = np.random.permutation(Tstat)
-
-#Tstat = np.sum(scores,axis=1)/np.sqrt(n)
-
-Tstat1 = np.copy(maskdata)
-j = 0
-for i in range(902629):
-    if Tstat1[i] == 1:
-            Tstat1[i] = Tstat[j]
-            j = j + 1
-    else:
-       Tstat1[i] = np.nan 
-        
-
-Tstat1 = np.reshape(Tstat1,(91,109,91))
-
-Tstat_img = nib.Nifti1Image(Tstat1, affine=[[  -2.,    0.,    0.,   90.],
-                                           [   0.,    2.,    0., -126.],
-                                           [   0.,    0.,    2.,  -72.],
-                                           [   0.,    0.,    0.,    1.]])
-
-plotting.plot_stat_map(Tstat_img,
-                           title = "GPA Vocal - NoVocal",
-                           output_file = in_path + "/out/zstat3Tstat_gpa.pdf",
-                           cut_coords = [-55,-30,-4])
-
-
-Tstat_rand1 = np.copy(maskdata)
-j = 0
-for i in range(902629):
-    if Tstat_rand1[i] == 1:
-            Tstat_rand1[i] = Tstat_rand[j]
-            j = j + 1
-    else:
-       Tstat_rand1[i] = np.nan 
-        
-
-Tstat_rand1 = np.reshape(Tstat_rand1,(91,109,91))
-
-Tstat_rand_img = nib.Nifti1Image(Tstat_rand1, affine=[[  -2.,    0.,    0.,   90.],
-                                           [   0.,    2.,    0., -126.],
-                                           [   0.,    0.,    2.,  -72.],
-                                           [   0.,    0.,    0.,    1.]])
-norm = mpl.colors.Normalize(vmin=0,vmax=1.)
-
-plotting.plot_stat_map(Tstat_rand_img, 
-                           title = "GPA Vocal - NoVocal",
-                           output_file = in_path + "/out/zstat3Tstat_rand_gpa.pdf",
-                           cut_coords = [-55,-30,-4])
-
 ########################################################################################
 #####################################HYPER##############################################
 ########################################################################################
@@ -205,7 +122,7 @@ plotting.plot_stat_map(Tstat_rand_img,
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "out/STG/Vocal/Hyper/sub-" + str(i) + "zstat1.nii.gz").get_fdata()
+    img = nib.load(in_path + "/Zstat_aligned/Hyper/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
   
@@ -215,48 +132,7 @@ n = scores.shape[1]
 Tstat = scores.mean(axis=1, dtype =np.float64)/(scores.std(axis=1, dtype =np.float64, ddof=0) +1e-12 /np.sqrt(n))
 
 Pvalues = 2*(1-stats.norm.cdf(np.abs(Tstat))) 
-Pvalues_hyp_1 = Pvalues
-
-#Tstat = np.sum(scores,axis=1)/np.sqrt(n)
-
-Pvalues1 = np.copy(maskdata)
-j = 0
-for i in range(902629):
-    if Pvalues1[i] == 1:
-            Pvalues1[i] = Pvalues[j]
-            j = j + 1
-    else:
-       Pvalues1[i] = np.nan 
-        
-
-Pvalues1 = np.reshape(Pvalues1,(91,109,91))
-
-Pvalues_img = nib.Nifti1Image(Pvalues1, affine=[[  -2.,    0.,    0.,   90.],
-                                           [   0.,    2.,    0., -126.],
-                                           [   0.,    0.,    2.,  -72.],
-                                           [   0.,    0.,    0.,    1.]])
-
-plotting.plot_stat_map(Pvalues_img,colorbar=True,
-                           title = "Hyperalignment Vocal",
-                           output_file = in_path + "/out/zstat1_hyp.pdf",
-                           cut_coords = [-59,-23,-3])
-
-#zstat3
-
-scores = np.zeros((10233,18)) 
-
-for i in range(1, 18):
-    img = nib.load(in_path + "out/STG/Vocal_NoVocal/Hyper/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
-    img = np.reshape(img, (902629))[maskdata==1]
-    scores[:,i] = img
-  
-scores.shape    
-n = scores.shape[1]
-
-Tstat = scores.mean(axis=1, dtype =np.float64)/(scores.std(axis=1, dtype =np.float64, ddof=0) +1e-12 /np.sqrt(n))
-
-Pvalues = 2*(1-stats.norm.cdf(np.abs(Tstat))) 
-Pvalues_hyp_3 = Pvalues
+Pvalues_hyp = Pvalues
 
 #Tstat = np.sum(scores,axis=1)/np.sqrt(n)
 
@@ -285,7 +161,7 @@ plotting.plot_stat_map(Pvalues_img,
 
 #Tstat
 
-Tstat_hyp_3 = Tstat
+Tstat_hyp = Tstat
 
 #Tstat = np.sum(scores,axis=1)/np.sqrt(n)
 
@@ -308,7 +184,7 @@ Tstat_img = nib.Nifti1Image(Tstat1, affine=[[  -2.,    0.,    0.,   90.],
 
 plotting.plot_stat_map(Tstat_img, 
                            title = "Hyperalignment Vocal - NoVocal",
-                           output_file = in_path + "/out/zstat3Tstat_hyp.pdf",
+                           output_file = "out/zstat3Tstat_hyp.pdf",
                            cut_coords = [-55,-30,-4])
 
 ########################################################################################
@@ -317,11 +193,10 @@ plotting.plot_stat_map(Tstat_img,
 
 #10233 n voxels with mask
 #902629 n voxels without mask
-
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "out/STG/Vocal/vMFPmodel/sub-" + str(i) + "zstat1.nii.gz").get_fdata()
+    img = nib.load(in_path + "Zstat_aligned/GPAprior/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
   
@@ -331,48 +206,7 @@ n = scores.shape[1]
 Tstat = scores.mean(axis=1, dtype =np.float64)/(scores.std(axis=1, dtype =np.float64, ddof=0) +1e-12 /np.sqrt(n))
 
 Pvalues = 2*(1-stats.norm.cdf(np.abs(Tstat))) 
-Pvalues_gpaPrior3_1 = Pvalues
-
-#Tstat = np.sum(scores,axis=1)/np.sqrt(n)
-
-Pvalues1 = np.copy(maskdata)
-j = 0
-for i in range(902629):
-    if Pvalues1[i] == 1:
-            Pvalues1[i] = Pvalues[j]
-            j = j + 1
-    else:
-       Pvalues1[i] = np.nan 
-        
-
-Pvalues1 = np.reshape(Pvalues1,(91,109,91))
-
-Pvalues_img = nib.Nifti1Image(Pvalues1, affine=[[  -2.,    0.,    0.,   90.],
-                                           [   0.,    2.,    0., -126.],
-                                           [   0.,    0.,    2.,  -72.],
-                                           [   0.,    0.,    0.,    1.]])
-
-plotting.plot_stat_map(Pvalues_img,
-                           title = "von Mises-Fisher Procrustes model Vocal",
-                           output_file = in_path + "/out/zstat1_vMFPmodel.pdf",
-                           cut_coords = [-59,-23,-3])
-
-#zstat3
-
-scores = np.zeros((10233,18)) 
-
-for i in range(1, 18):
-    img = nib.load(in_path + "out/STG/Vocal_NoVocal/vMFPmodel/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
-    img = np.reshape(img, (902629))[maskdata==1]
-    scores[:,i] = img
-  
-scores.shape    
-n = scores.shape[1]
-
-Tstat = scores.mean(axis=1, dtype =np.float64)/(scores.std(axis=1, dtype =np.float64, ddof=0) +1e-12 /np.sqrt(n))
-
-Pvalues = 2*(1-stats.norm.cdf(np.abs(Tstat))) 
-Pvalues_gpaPrior3_3 = Pvalues
+Pvalues_gpaPrior = Pvalues
 
 Pvalues1 = np.copy(maskdata)
 j = 0
@@ -394,17 +228,39 @@ Pvalues_img = nib.Nifti1Image(Pvalues1, affine=[[  -2.,    0.,    0.,   90.],
     
 plotting.plot_stat_map(Pvalues_img,
                            title = "von Mises-Fisher Procrustes model Vocal - NoVocal",
-                           output_file = in_path + "/out/zstat3_vMFPmodel.pdf",
+                           output_file = "zstat3_vMFPmodel.pdf",
                            cut_coords = [-55,-30,-4])
 
+#Tstat
+Tstat_gpaPrior = Tstat
+Tstat1 = np.copy(maskdata)
+j = 0
+for i in range(902629):
+    if Tstat1[i] == 1:
+            Tstat1[i] = Tstat[j]
+            j = j + 1
+    else:
+       Tstat1[i] = np.nan 
+        
 
+Tstat1 = np.reshape(Tstat1,(91,109,91))
+
+Tstat_img = nib.Nifti1Image(Tstat1, affine=[[  -2.,    0.,    0.,   90.],
+                                           [   0.,    2.,    0., -126.],
+                                           [   0.,    0.,    2.,  -72.],
+                                           [   0.,    0.,    0.,    1.]])
+
+plotting.plot_stat_map(Tstat_img,
+                           title = "No alignment Vocal - NoVocal",
+                           output_file = "zstat3Tstat_vMFPmodel.pdf",
+                           cut_coords = [-55,-30,-4])
 
 ############################NOALIGNMENT#########################################
 
 scores = np.zeros((10233,18)) 
 
 for i in range(1, 18):
-    img = nib.load(in_path + "out/STG/Vocal_NoVocal/NoAlign/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
+    img = nib.load(in_path + "Zstat_aligned/NoAlign/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
     img = np.reshape(img, (902629))[maskdata==1]
     scores[:,i] = img
 
@@ -414,7 +270,7 @@ n = scores.shape[1]
 Tstat = scores.mean(axis=1, dtype =np.float64)/(scores.std(axis=1, dtype =np.float64, ddof=0) +1e-12 /np.sqrt(n))
 
 Pvalues = 2*(1-stats.norm.cdf(np.abs(Tstat))) 
-Pvalues_real_3 = Pvalues
+Pvalues_real = Pvalues
 
 #Tstat = np.sum(scores,axis=1)/np.sqrt(n)
 
@@ -437,11 +293,11 @@ Pvalues_img = nib.Nifti1Image(Pvalues1, affine=[[  -2.,    0.,    0.,   90.],
 
 plotting.plot_stat_map(Pvalues_img,
                            title = "No alignment Vocal - NoVocal",
-                           output_file = in_path + "/out/zstat3_noAlignment.pdf",
+                           output_file = "zstat3_noAlignment.pdf",
                            cut_coords = [-55,-30,-4])
 
 #Tstat
-Tstat_real_3 = Tstat
+Tstat_real = Tstat
 Tstat1 = np.copy(maskdata)
 j = 0
 for i in range(902629):
@@ -461,7 +317,7 @@ Tstat_img = nib.Nifti1Image(Tstat1, affine=[[  -2.,    0.,    0.,   90.],
 
 plotting.plot_stat_map(Tstat_img,
                            title = "No alignment Vocal - NoVocal",
-                           output_file = in_path + "/out/zstat3Tstat_noAlignment.pdf",
+                           output_file = "zstat3Tstat_noAlignment.pdf",
                            cut_coords = [-55,-30,-4])
 
 
@@ -471,40 +327,40 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
 fig, ax = plt.subplots()
-plt.scatter(-np.log10(Pvalues_hyp_3),-np.log10(Pvalues_gpaPrior1_3))
+plt.scatter(-np.log10(Pvalues_hyp),-np.log10(Pvalues_gpaPrior))
 line = mlines.Line2D([0, 1], [0, 1], color='red')
 transform = ax.transAxes
 line.set_transform(transform)
 ax.add_line(line)
 plt.xlabel('Hyperalignment', fontsize=18)
 plt.ylabel('Fisher-Procrustes model', fontsize=16)
-plt.savefig(in_path + "out/pvalues_hyp.pdf")
+plt.savefig("pvalues_hyp.pdf")
 plt.show()
 
 fig, ax = plt.subplots()
-plt.scatter(-np.log10(Pvalues_gpa_3),-np.log10(Pvalues_gpaPrior1_3))
+plt.scatter(-np.log10(Pvalues_gp),-np.log10(Pvalues_gpaPrior))
 line = mlines.Line2D([0, 1], [0, 1], color='red')
 transform = ax.transAxes
 line.set_transform(transform)
 ax.add_line(line)
 plt.xlabel('GPA', fontsize=18)
 plt.ylabel('Fisher-Procrustes model', fontsize=16)
-plt.savefig(in_path + "out/pvalues_GPA.pdf")
+plt.savefig("pvalues_GPA.pdf")
 plt.show()
 
 fig, ax = plt.subplots()
-plt.scatter(-np.log10(Pvalues_real_3),-np.log10(Pvalues_gpaPrior1_3))
+plt.scatter(-np.log10(Pvalues_real),-np.log10(Pvalues_gpaPrior))
 line = mlines.Line2D([0, 1], [0, 1], color='red')
 transform = ax.transAxes
 line.set_transform(transform)
 ax.add_line(line)
 plt.xlabel('No Alignment', fontsize=18)
 plt.ylabel('Fisher-Procrustes model', fontsize=16)
-plt.savefig(in_path + "out/pvalues_real.pdf")
+plt.savefig("pvalues_real.pdf")
 plt.show()
 
 fig, ax = plt.subplots()
-plt.scatter(-np.log10(Pvalues_real_3),-np.log10(Pvalues_hyp_3))
+plt.scatter(-np.log10(Pvalues_real),-np.log10(Pvalues_hyp))
 line = mlines.Line2D([0, 1], [0, 1], color='red')
 transform = ax.transAxes
 line.set_transform(transform)
@@ -524,7 +380,7 @@ rcParams['figure.figsize'] =  [6.4, 6.4]
 
 fig, ax = plt.subplots()
 ax.set_aspect(1)
-plt.scatter(abs(Tstat_hyp_3),abs(Tstat_gpaPrior1_3))
+plt.scatter(abs(Tstat_hyp),abs(Tstat_gpaPrior))
  # set axes range
 plt.xlim((0,2.5))
 plt.ylim((0,2.5))
@@ -534,12 +390,12 @@ line.set_transform(transform)
 ax.add_line(line)
 plt.xlabel('Hyperalignment', fontsize=18)
 plt.ylabel('von Mises-Fisher Procrustes model', fontsize=18)
-plt.savefig(in_path + "out/Tstat_hyp.pdf")
+plt.savefig("Tstat_hyp.pdf")
 plt.show()
 
 fig, ax = plt.subplots()
 ax.set_aspect(1)
-plt.scatter(abs(Tstat_gpa_3),abs(Tstat_gpaPrior1_3))
+plt.scatter(abs(Tstat_gpa),abs(Tstat_gpaPrior))
 plt.xlim((0,2.5))
 plt.ylim((0,2.5))
 line = mlines.Line2D([0, 1], [0, 1], color='red')
@@ -548,12 +404,12 @@ line.set_transform(transform)
 ax.add_line(line)
 plt.xlabel('GPA', fontsize=18)
 plt.ylabel('von Mises-Fisher Procrustes model', fontsize=18)
-plt.savefig(in_path + "out/Tstat_GPA.pdf")
+plt.savefig("Tstat_GPA.pdf")
 plt.show()
 
 fig, ax = plt.subplots()
 ax.set_aspect(1)
-plt.scatter(abs(Tstat_real_3),abs(Tstat_gpaPrior1_3))
+plt.scatter(abs(Tstat_real),abs(Tstat_gpaPrior))
 plt.xlim((0,2.5))
 plt.ylim((0,2.5))
 line = mlines.Line2D([0, 1], [0, 1], color='red')
@@ -562,7 +418,7 @@ line.set_transform(transform)
 ax.add_line(line)
 plt.xlabel('No Alignment', fontsize=18)
 plt.ylabel('von Mises-Fisher Procrustes model', fontsize=18)
-plt.savefig(in_path + "out/Tstat_real.pdf")
+plt.savefig("Tstat_real.pdf")
 plt.show()
 
 
