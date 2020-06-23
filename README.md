@@ -1,3 +1,5 @@
+<img src="sticker.png" align="right" alt="" width="200" />
+
 # The von Mises-Fisher-Procrustes model
 [![DOI](https://zenodo.org/badge/224435643.svg)](https://zenodo.org/badge/latestdoi/224435643)
 
