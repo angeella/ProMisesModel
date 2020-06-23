@@ -12,9 +12,12 @@ from mvpa2.datasets.base import FlattenMapper
 from mvpa2.algorithms.hyperalignment import Hyperalignment
 from mvpa2.measures.anova import vstack
 from mvpa2.mappers.fx import mean_group_sample
+from mvpa2.suite import *
 import os
 os.chdir('C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel') #your path
 from vMFPmodel import vMFPmodel
+from procrustean import ProcrusteanMapper
+
 if __debug__:
     from mvpa2.base import debug
 
@@ -34,7 +37,7 @@ def wipe_out_offdiag(a, window_size, value=np.inf):
     return a
 
 
-def timesegments_classification(
+def timesegments_classification_single(
         dss,
         al = 'h ',
         hyper = None,
@@ -72,13 +75,14 @@ def timesegments_classification(
     #Additional argument for gpa function
     maxIt = kwargs.get('maxIt', None)
     t = kwargs.get('t', None)
-    #k = kwargs.get('k', None)
+    k = kwargs.get('k', None)
     Q = kwargs.get('Q', None)
     ref_ds = kwargs.get('ref_ds', None)
-    scaling = kwargs.get('scaling', None)
+    scaling = kwargs.get('scaling',None)
     reflection = kwargs.get('reflection',None)
     subj = kwargs.get('subj',None)
-    kval = kwargs.get('kval',None)
+    alpha = kwargs.get('alpha',None)
+    alignment = kwargs.get('alignment',None)
     # Generate outer-most partitioning ()
     #copy ds putting the HalfPartitioner generator 
     #Divide each subject into two part
@@ -109,47 +113,19 @@ def timesegments_classification(
                 zscore(ds, chunks_attr=None)
 
         if hyper is 'h':
-            # since otherwise it would remember previous loop dataset as the "commonspace"
-            # Now let's do hyperalignment but on a copy in each loop iteration
-            hyper_ = copy.deepcopy(Hyperalignment())
+            hyper_ = copy.deepcopy(Hyperalignment(alignment=ProcrusteanMapper(svd='dgesvd',space='commonspace'),alpha=alpha))
             mappers = hyper_(dss_train)
         else:
-            if hyper is 'gpa':                
-                if len(str(kval))==1:
-                    hyper_ = copy.deepcopy(vMFPmodel(maxIt =maxIt, t = t, k = kval, Q = None, ref_ds =ref_ds, 
-                                               scaling = scaling, reflection = reflection, subj= subj))
-                    align = hyper_.gpa(dss_train)
-                else:
-                    GCV = []
-                    SSEv = []
-                    for k in kval:
-                        hyper_ = vMFPmodel(maxIt =maxIt, t = t, k = k, Q = Q, ref_ds =ref_ds, 
-                                                   scaling = scaling, reflection = reflection, subj= subj)
-                        align = hyper_.gpa(dss_train)                       
-                        #GCV
-                        X0 = [ds_t.samples for ds_t in dss_train]
-                        Xhat = [ds_ta for ds_ta in align[0]]
-                        R0 = align[2]
-                        M0 = np.mean(Xhat, axis= 0)
-                        n = float(X0[0].shape[0])
-                        SSE = [np.linalg.norm(np.dot(x,r) - M0, 'fro') for x,r in zip(X0,R0)]
-                        T_l = [(1-np.trace(r)/n)**2 for r in R0]  
-                        GCV.append(np.sum([1/n * v_l**2 /t_l for v_l, t_l in zip(SSE,T_l)]))
-                        SSEv.append(SSE)
-                   
-                    kGCV = zip(kval,GCV)
-                    khat = min(kGCV, key = lambda t: t[1])[0] 
-                   
-                    hyper_ = copy.deepcopy(priorHyA(maxIt =maxIt, t = t, k = khat, Q = Q, ref_ds =ref_ds, 
-                                                   scaling = scaling, reflection = reflection, subj= subj))
-                    align = hyper_.gpa(dss_train)
-               
-                mappers = align[1]
+            if hyper is 'gpa':
+               hyper_ = copy.deepcopy(vMFPmodel(maxIt =maxIt, t = t, k = k, Q = Q, ref_ds =ref_ds, scaling = scaling, reflection = reflection, subj = subj))
+               mappers = hyper_.gpa(dss_train)[1] 
             else:
-                mappers = [IdentityMapper() for ds in dss_train]
+               mappers = [IdentityMapper() for ds in dss_train]
 
         dss_test_aligned = [mapper.forward(ds) for mapper, ds in zip(mappers, dss_test)]
-       
+        
+        
+        
         # assign .sa.subjects to those datasets
         for i, ds in enumerate(dss_test_aligned):
             # part2.attr is by default "subjects"
@@ -208,14 +184,8 @@ def timesegments_classification(
     if __debug__:
         debug("BM", "Finished with %s array of errors. Mean error %.2f"
               % (errors.shape, np.mean(errors)))
-    if hyper is 'gpa':
-        if len(str(kval))==1:
-            return errors
-        else:
-            return errors, kGCV, SSEv        
-    else:
-        return errors
-    
+    return errors
+
 
 def _get_nonoverlapping_startpoints(n, window_size):
     return range(0, n - window_size + 1, window_size)

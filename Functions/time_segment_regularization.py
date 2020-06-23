@@ -12,9 +12,8 @@ from mvpa2.datasets.base import FlattenMapper
 from mvpa2.measures.anova import vstack
 from mvpa2.mappers.fx import mean_group_sample
 import os
-os.chdir('//dartfs-hpc/rc/home/w/f003vpw/MovieAnalysis/Final_analysis')
-from priorGPA_1 import priorHyA
-os.chdir('//dartfs-hpc/rc/home/w/f003vpw/MovieAnalysis/Final_analysis')
+os.chdir('C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel') #your path
+from vMFPmodel import vMFPmodel
 from time_segment_single import timesegments_classification_single
 if __debug__:
     from mvpa2.base import debug
@@ -136,7 +135,7 @@ def timesegments_classification(
         else:
             if hyper is 'gpa':
                 if len(str(kval))==1:
-                   hyper_ = copy.deepcopy(priorHyA(maxIt =maxIt, t = t, k = kval, Q = None, ref_ds = ref_ds, scaling=scaling, 
+                   hyper_ = copy.deepcopy(vMFPmodel(maxIt =maxIt, t = t, k = kval, Q = None, ref_ds = ref_ds, scaling=scaling, 
                                                           reflection = reflection, subj=subj))
                    mappers = hyper_.gpa(dss_train)[1] 
                 else:
@@ -154,7 +153,7 @@ def timesegments_classification(
                     mean_err = [np.mean(ets) for ets in err_ts]
                     k_cv = zip(kval,mean_err)
                     khat = min(k_cv, key = lambda t: t[1])[0]
-                    hyper_ = copy.deepcopy(priorHyA(maxIt =maxIt, t = t, k = khat, Q = Q, ref_ds =ref_ds, scaling=scaling, reflection = reflection, subj=subj))
+                    hyper_ = copy.deepcopy(vMFPmodel(maxIt =maxIt, t = t, k = khat, Q = Q, ref_ds =ref_ds, scaling=scaling, reflection = reflection, subj=subj))
                     mappers = hyper_.gpa(dss_train)[1] 
             else:
                mappers = [IdentityMapper() for ds in dss_train]
