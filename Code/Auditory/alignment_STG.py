@@ -26,6 +26,8 @@ from nilearn.input_data import NiftiMasker
 from dipy.align.reslice import reslice
 import mvpa2.base.hdf5 as hd
 
+#You need to download the Auditory Dataset from https://openneuro.org/datasets/ds000158/versions/1.0.0
+#and apply the STG mask or other mask (The mask is available in Data/Auditory).
 path = "C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel/Data/Auditory"
 idx = np.hstack(['021',[ '0'+ str(x) for x in range(23,32)], [ '0'+ str(x) for x in range(33,41)]])
 
@@ -263,3 +265,10 @@ for ds in range(len(out)):
 #  data2, affine2 = reslice(data, affine, zooms, new_zooms)
 #  img2 = nib.nifti1.Nifti1Image(data2, affine2)
   nib.save(nimg, path + 'sub-' + str(idx[ds]) + 'STG_vMFP.nii.gz')
+
+#After that you need to perform the between subject analysis using for example FSL and using the images 
+#aligned. Then, save it as 
+
+#    img = nib.load(in_path + "/Zstat_aligned/GPA/sub-" + str(i) + "zstat3.nii.gz").get_fdata()
+
+#and so on, in order ot use code Code/Auditory/zstat.py

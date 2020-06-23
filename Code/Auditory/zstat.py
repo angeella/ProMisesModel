@@ -58,7 +58,7 @@ Pvalues_img = nib.Nifti1Image(Pvalues1, affine=[[  -2.,    0.,    0.,   90.],
 
 plotting.plot_stat_map(Pvalues_img,
                            title = "GPA Vocal  - NoVocal",
-                           output_file = in_path + "/out/zstat3_gpa.pdf",
+                           output_file = in_path + "zstat3_gpa.pdf",
                            cut_coords = [-55,-30,-4])
 
 
@@ -85,7 +85,7 @@ Tstat_img = nib.Nifti1Image(Tstat1, affine=[[  -2.,    0.,    0.,   90.],
 
 plotting.plot_stat_map(Tstat_img, 
                            title = "GPA Vocal - NoVocal",
-                           output_file = in_path + "/out/zstat3Tstat_gpa.pdf",
+                           output_file = in_path + "zstat3Tstat_gpa.pdf",
                            cut_coords = [-55,-30,-4])
 
 
@@ -109,7 +109,7 @@ norm = mpl.colors.Normalize(vmin=0,vmax=1.)
 
 plotting.plot_stat_map(Pvalues_img, cmap = 'ocean_hot',
                            title = "GPA Vocal - NoVocal",
-                           output_file = in_path + "/out/zstat3_gpa_rand.pdf",
+                           output_file = in_path + "zstat3_gpa_rand.pdf",
                            cut_coords = [-55,-30,-4])
 
 
@@ -156,7 +156,7 @@ nib.save(Pvalues_img, in_path + '/out/Pvalues3_Hyper.nii.gz')
 
 plotting.plot_stat_map(Pvalues_img, 
                            title = "Hyperalignment Vocal - NoVocal",
-                           output_file = in_path + "/out/zstat3_hyp.pdf",
+                           output_file = in_path + "zstat3_hyp.pdf",
                            cut_coords = [-55,-30,-4])
 
 #Tstat
@@ -184,7 +184,7 @@ Tstat_img = nib.Nifti1Image(Tstat1, affine=[[  -2.,    0.,    0.,   90.],
 
 plotting.plot_stat_map(Tstat_img, 
                            title = "Hyperalignment Vocal - NoVocal",
-                           output_file = "out/zstat3Tstat_hyp.pdf",
+                           output_file = "zstat3Tstat_hyp.pdf",
                            cut_coords = [-55,-30,-4])
 
 ########################################################################################

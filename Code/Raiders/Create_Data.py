@@ -11,25 +11,27 @@ from scipy.sparse.linalg import svds
 import matplotlib.pyplot as plt
 import itertools
 import os
-npyfilespath ="//dartfs-hpc/rc/home/w/f003vpw/MovieData/raiders/data/preprocessed/raiders-8ch"   
+npyfilespath ="/MovieData/raiders/data/preprocessed/raiders-8ch"   
 os.chdir(npyfilespath)
 import glob
 from nibabel.freesurfer.io import read_geometry
 from mvpa2.support.nibabel.surf import Surface
 
+#You need to download the data from https://github.com/HaxbyLab/raiders_data for EV, LO and VT.
+
 #Load data, 10 subject, 8 runs, left and right hemispher. We use the first scan 8ch with resolution 10242=32**2 *10 + 2
-npyfilespath ="//dartfs-hpc/rc/home/w/f003vpw/MovieData/raiders/data/preprocessed/raiders-8ch/"   
+npyfilespath ="/MovieData/raiders/data/preprocessed/raiders-8ch/"   
 os.chdir(npyfilespath)
 
 #mask
-vt_lh = nib.load('//dartfs-hpc/rc/home/w/f003vpw/MovieData/raiders/masks/lh.mask_VT.gii').darrays[0].data.astype(bool)[:10242]
-vt_rh = nib.load('//dartfs-hpc/rc/home/w/f003vpw/MovieData/raiders/masks/rh.mask_VT.gii').darrays[0].data.astype(bool)[:10242]
+vt_lh = nib.load('/MovieData/raiders/masks/lh.mask_VT.gii').darrays[0].data.astype(bool)[:10242]
+vt_rh = nib.load('/MovieData/raiders/masks/rh.mask_VT.gii').darrays[0].data.astype(bool)[:10242]
 
 #Function
 
 #Function Left hemispher
 def loadDataLeft(ID) :
-    npyfilespath ="//dartfs-hpc/rc/home/w/f003vpw/MovieData/raiders/data/preprocessed/raiders-8ch/"   
+    npyfilespath ="/MovieData/raiders/data/preprocessed/raiders-8ch/"   
     sub = []
     dim = []
     for npfile in sorted(glob.glob(ID +'_ses1_raiders_*_lh.npy')):
@@ -45,7 +47,7 @@ def loadDataLeft(ID) :
 
 #Function Right hemispher
 def loadDataRight(ID) :
-    npyfilespath ="//dartfs-hpc/rc/home/w/f003vpw/MovieData/raiders/data/preprocessed/raiders-8ch/"   
+    npyfilespath ="/MovieData/raiders/data/preprocessed/raiders-8ch/"   
     sub = []
     dim = []
     for npfile in glob.glob(ID +'_ses1_raiders_*_rh.npy'):
@@ -74,18 +76,18 @@ for i in subj:
     shapeL.append(np.array(sl))
 
 
+f_myfile = open('movie.data', 'wb')
+pickle.dump(ds_all, f_myfile)
+f_myfile.close()
 
-
-np.savez('//dartfs-hpc/rc/home/w/f003vpw/MovieAnalysis/data/dataMovie.npz', 
-         ds_all = ds_all, shapeL = shapeL)
 
 #Load coordinates
 
 #mask_l = np.load('//dartfs-hpc/rc/home/w/f003vpw/MovieData/searchlight/fsaverage_lh_mask.npy')
 #mask_r = np.load('//dartfs-hpc/rc/home/w/f003vpw/MovieData/searchlight/fsaverage_rh_mask.npy')
 
-vertices_l, faces_l = read_geometry('//dartfs-hpc/rc/home/w/f003vpw/MovieData/searchlight/fsaverage/surf/lh.midthickness')
-vertices_r, faces_r = read_geometry('//dartfs-hpc/rc/home/w/f003vpw/MovieData/searchlight/fsaverage/surf/rh.midthickness')
+vertices_l, faces_l = read_geometry('/MovieData/searchlight/fsaverage/surf/lh.midthickness')
+vertices_r, faces_r = read_geometry('/MovieData/searchlight/fsaverage/surf/rh.midthickness')
 
 vertices_l[:10242]
 vertices_r[:10242]
@@ -102,5 +104,7 @@ coord_r = surf_l.vertices[vt_idx_r,:]
 coord = np.concatenate((coord_l,coord_r),axis=0)
 
 
-np.savez('/dartfs-hpc/rc/home/w/f003vpw/MovieAnalysis/data/coord.npz', 
+np.savez('/Data/Raiders/Raiders_data/coord.npz', 
          surf_l = surf_l, surf_r = surf_r, coord = coord)
+
+#For each ROI of interest
