@@ -1,7 +1,7 @@
 <img src="sticker.png" align="right" alt="" width="200" />
 
 # The von Mises-Fisher-Procrustes model
-[![DOI](https://zenodo.org/badge/224435643.svg)](https://zenodo.org/badge/latestdoi/224435643)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3935546.svg)](https://doi.org/10.5281/zenodo.3935546)
 
 In this repository, you can find 
   1. A short tutorial about the application of the von Mises-Fisher-Procrustes model using fMRI data;
