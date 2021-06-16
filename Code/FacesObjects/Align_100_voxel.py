@@ -19,8 +19,8 @@ from mvpa2.suite import *
 if __debug__:
     from mvpa2.base import debug
 import os
-os.chdir('C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel')
-from vMFPmodel import vMFPmodel
+os.chdir('C:/Users/Angela Andreella/Documents/GitHub/ProMisesModel')
+from ProMisesModel import ProMisesModel
 import pickle
 import mvpa2.base.hdf5 as hd
 from random import shuffle
@@ -47,9 +47,9 @@ def traceProcrustes(ds_hyper):
 
 
 #Import data
-ds_all = hd.h5load("C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel/Data/Faces_Objects/hyperalignment_tutorial_data_2.4.hdf5.gz")
+ds_all = hd.h5load("C:/Users/Angela Andreella/Documents/GitHub/ProMisesModel/Data/Faces_Objects/hyperalignment_tutorial_data_2.4.hdf5.gz")
 
-__all__= ['vMFPmodel'] #explicitly exports the symbols priorHyA
+__all__= ['ProMisesModel'] #explicitly exports the symbols priorHyA
 
 # inject the subject ID into all datasets
 for i, sd in enumerate(ds_all):
@@ -188,7 +188,7 @@ for test_run in range(nruns):
                     
     #GPA normal
     
-    hyper = vMFPmodel(maxIt = 20, t = 0.001, k = 0, Q = None, ref_ds = None,  scaling=True, reflection = True, subj=False)
+    hyper = ProMisesModel(maxIt = 20, t = 0.001, k = 0, Q = None, ref_ds = None,  scaling=True, reflection = True, subj=False)
     hypmaps = hyper.gpa(datasets=ds_train_fs)
     dist0it.append(hypmaps[3])
     ds_hyper = [h.forward(sd) for h, sd in zip(hypmaps[1], ds_test_fs)]
@@ -256,7 +256,7 @@ for test_run in range(nruns):
               coord = [d.fa.voxel_indices for d in ds_val]
               dist = [cdist(np.array(c), np.array(c), "euclidean") for c in coord]
               Q2 = [np.exp(-d/c.shape[0]) for d,c in zip(dist,coord)]
-              hyper = vMFPmodel(maxIt = 20, t = 0.001, k = k, Q = Q2, ref_ds = None,  scaling=True, reflection = True, subj=True)
+              hyper = ProMisesModel(maxIt = 20, t = 0.001, k = k, Q = Q2, ref_ds = None,  scaling=True, reflection = True, subj=True)
               hypmaps = hyper.gpa(datasets=ds_val)
               #distE.append(distance_pairwise(hypmaps= hypmaps, dss = ds_val, alignment='gpa'))
               ds_hyper = [h.forward(sd) for h, sd in zip(hypmaps[1], ds_t)]
@@ -277,7 +277,7 @@ for test_run in range(nruns):
     dist = [cdist(np.array(c), np.array(c), "euclidean") for c in coord]
     Q2 = [np.exp(-d/c.shape[0]) for d,c in zip(dist,coord)]
     Qsave.append(Q2)
-    hyper = vMFPmodel(maxIt = 20, t = 0.001, k = khat, Q = Q2, ref_ds = None,  scaling=True, reflection = True, subj=True)
+    hyper = ProMisesModel(maxIt = 20, t = 0.001, k = khat, Q = Q2, ref_ds = None,  scaling=True, reflection = True, subj=True)
     hypmaps = hyper.gpa(datasets=ds_train_fs)
     distEit.append(hypmaps[3])          
     ds_hyper = [h.forward(sd) for h, sd in zip(hypmaps[1], ds_test_fs)]
@@ -304,5 +304,5 @@ mean_gpaE_results = np.mean(bsc_gpaE_results)
 
 tracegpaprior = np.mean(traceGPAprior, axis = 0)
 
-np.savez('out_vMFPmodel.npz', cmE_mean = cmE_mean,
+np.savez('out_ProMisesModel.npz', cmE_mean = cmE_mean,
          mean_gpaE_results = mean_gpaE_results)

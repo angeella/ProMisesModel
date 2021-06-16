@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 data = np.load('out_hyp.npz')
 data1 = np.load('out_gpa.npz')
-data2 = np.load('out_vMFPmodel.npz')
+data2 = np.load('out_ProMisesModel.npz')
 
 #cm_mean = np.mean(data["cm_mean"], axis = 0)
 cm_mean = data["cm_mean"][53]

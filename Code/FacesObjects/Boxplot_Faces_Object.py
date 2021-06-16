@@ -11,7 +11,7 @@ from matplotlib.pyplot import text
 #100 Voxels
 data = np.load('out_hyp.npz')
 data1 = np.load('out_gpa.npz')
-data2 = np.load('out_vMFPmodel.npz')
+data2 = np.load('out_ProMisesModel.npz')
 
 plt.figure(figsize=(23,23))
 #plt.rcParams["axes.labelsize"] = 10

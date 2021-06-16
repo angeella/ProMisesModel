@@ -8,8 +8,8 @@ from mvpa2.suite import *
 #if __debug__:
 #    from mvpa2.base import debug
 import os
-os.chdir('C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel') #your path
-from vMFPmodel import vMFPmodel
+os.chdir('C:/Users/Angela Andreella/Documents/GitHub/ProMisesModel') #your path
+from ProMisesModel import ProMisesModel
 #import pickle
 #from function import distance_pairwise
 import nibabel as nib
@@ -28,7 +28,7 @@ import mvpa2.base.hdf5 as hd
 
 #You need to download the Auditory Dataset from https://openneuro.org/datasets/ds000158/versions/1.0.0
 #and apply the STG mask or other mask (The mask is available in Data/Auditory).
-path = "C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel/Data/Auditory"
+path = "C:/Users/Angela Andreella/Documents/GitHub/ProMisesModel/Data/Auditory"
 idx = np.hstack(['021',[ '0'+ str(x) for x in range(23,32)], [ '0'+ str(x) for x in range(33,41)]])
 
 #img_dt = []
@@ -145,7 +145,7 @@ for ds in range(len(out)):
 #######################################GPA##############################################################################
 #####################################################################################################
 
-hyper = vMFPmodel(maxIt = 10, t = 0.001, k = 0, Q = None, ref_ds = None,  scaling=True, reflection = True, subj=False)
+hyper = ProMisesModel(maxIt = 10, t = 0.001, k = 0, Q = None, ref_ds = None,  scaling=True, reflection = True, subj=False)
     
 hypmaps = hyper.gpa(datasets=img_Right)
 
@@ -153,7 +153,7 @@ R = hypmaps[2]
 X = [h.samples for h in img_Right]
 Xest_Right = [np.dot(x,r) for x,r in zip(X,R)]
 
-hyper = vMFPmodel(maxIt = 10, t = 0.001, k = 0, Q = None, ref_ds = None,  scaling=True, reflection = True, subj=False)
+hyper = ProMisesModel(maxIt = 10, t = 0.001, k = 0, Q = None, ref_ds = None,  scaling=True, reflection = True, subj=False)
 
 hypmaps = hyper.gpa(datasets=img_Left)
 
@@ -178,7 +178,7 @@ for ds in range(len(out)):
   nib.save(nimg, path + 'sub-' + str(idx[ds]) + 'STG_GPA.nii.gz')
 
 #####################################################################################################
-###############################################GPA PRIOR###############################################
+###############################################ProMises###############################################
 #####################################################################################################
 
 kval =  np.arange(101)
@@ -196,7 +196,7 @@ for k in range(len(kval)):
             if nLogic[i]:
                 nOO.append(i)
         ds_LOO = [img_Right[i] for i in nOO]
-        hyper = vMFPmodel(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+        hyper = ProMisesModel(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
         hypmaps = hyper.gpa(datasets=ds_LOO)
         R = hypmaps[2]
         Xest = hypmaps[0]
@@ -209,7 +209,7 @@ logSumK = zip(kval,logSum)
 khat = min(logSumK, key = lambda t: t[1])[0]
 
 
-hyper = vMFPmodel(maxIt = 10, t = 0.01, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+hyper = ProMisesModel(maxIt = 10, t = 0.01, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
 hypmaps = hyper.gpa(datasets=img_Right)        
 Xest_Right = [h.forward(sd) for h, sd in zip(hypmaps[1], img_Right)]
 distHprior = distance_pairwise(Xest_Right)
@@ -230,7 +230,7 @@ for k in range(len(kval)):
             if nLogic[i]:
                 nOO.append(i)
         ds_LOO = [img_Right[i] for i in nOO]
-        hyper = vMFPmodel(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+        hyper = ProMisesModel(maxIt = 10, t = 0.01, k = k, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
         hypmaps = hyper.gpa(datasets=ds_LOO)
         R = hypmaps[2]
         Xest = hypmaps[0]
@@ -242,7 +242,7 @@ for k in range(len(kval)):
 logSumK = zip(kval,logSum)
 khat = min(logSumK, key = lambda t: t[1])[0]
 
-hyper = vMFPmodel(maxIt = 10, t = 0.01, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
+hyper = ProMisesModel(maxIt = 10, t = 0.01, k = khat, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=False)
 hypmaps = hyper.gpa(datasets=img_Left)        
 Xest_Left = [h.forward(sd) for h, sd in zip(hypmaps[1], img_Left)]
 distHprior = distance_pairwise(Xest_Left)

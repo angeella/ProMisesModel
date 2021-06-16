@@ -13,8 +13,8 @@ from mvpa2.algorithms.hyperalignment import Hyperalignment
 from mvpa2.measures.anova import vstack
 from mvpa2.mappers.fx import mean_group_sample
 import os
-os.chdir('C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel') #your path
-from vMFPmodel import vMFPmodel
+os.chdir('C:/Users/Angela Andreella/Documents/GitHub/ProMisesModel') #your path
+from ProMisesModel import ProMisesModel
 if __debug__:
     from mvpa2.base import debug
 
@@ -116,14 +116,14 @@ def timesegments_classification(
         else:
             if hyper is 'gpa':                
                 if len(str(kval))==1:
-                    hyper_ = copy.deepcopy(vMFPmodel(maxIt =maxIt, t = t, k = kval, Q = None, ref_ds =ref_ds, 
+                    hyper_ = copy.deepcopy(ProMisesModel(maxIt =maxIt, t = t, k = kval, Q = None, ref_ds =ref_ds, 
                                                scaling = scaling, reflection = reflection, subj= subj))
                     align = hyper_.gpa(dss_train)
                 else:
                     GCV = []
                     SSEv = []
                     for k in kval:
-                        hyper_ = vMFPmodel(maxIt =maxIt, t = t, k = k, Q = Q, ref_ds =ref_ds, 
+                        hyper_ = ProMisesModel(maxIt =maxIt, t = t, k = k, Q = Q, ref_ds =ref_ds, 
                                                    scaling = scaling, reflection = reflection, subj= subj)
                         align = hyper_.gpa(dss_train)                       
                         #GCV

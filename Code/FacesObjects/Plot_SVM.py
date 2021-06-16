@@ -21,7 +21,7 @@ contrasts = [('DogFace', 'Chair'), ('FemaleFace', 'Chair'), ('House', 'Chair'),
        ('Shoe', 'MonkeyFace')]
 
 
-ds_all = hd.h5load("C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel/Data/Faces_Objects/hyperalignment_tutorial_data_2.4.hdf5.gz")
+ds_all = hd.h5load("C:/Users/Angela Andreella/Documents/GitHub/ProMisesModel/Data/Faces_Objects/hyperalignment_tutorial_data_2.4.hdf5.gz")
 
 ###Hyperalignment
 

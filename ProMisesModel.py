@@ -16,7 +16,7 @@ from mvpa2.algorithms.group_clusterthr import EnsureInt
 from mvpa2.algorithms.group_clusterthr import Parameter
 from mvpa2.algorithms.group_clusterthr import EnsureRange
  
-__all__= ['vMFPmodel'] #explicitly exports the symbols vMFPmodel
+__all__= ['ProMisesModel'] #explicitly exports the symbols ProMisesModel
 
 #Main function that will be Parallelize
 
@@ -44,7 +44,7 @@ def gpaSub(X, Q, k, ref_ds, col, scaling, reflection):
         Xest = X.dot(R)* scale
     return Xest, R
 
-class vMFPmodel(ClassWithCollections):
+class ProMisesModel(ClassWithCollections):
     
     """Align multiple matrices, e.g., fMRI images, into a common feature space using the von Mises-Fisher-Procrustes model. 
     The aligorithm is a slight modification of the Generalized Procrustes Analysis :ref:`Gower, J. C., Psychometrika, (1975).` 
@@ -56,10 +56,10 @@ class vMFPmodel(ClassWithCollections):
     >>> import mvpa2
     >>> from mvpa2.suite import *
     >>> import os
-    >>> os.chdir('yourpathwhere_vMFPmodel.py_is')
-    >>> from vMFPmodel import gpaSub
+    >>> os.chdir('yourpathwhere_ProMisesModel.py_is')
+    >>> from ProMisesModel import gpaSub
     >>> #Load dataset
-    >>> ds_all = h5load('~/GitHub/vMFPmodel/Data/Faces_Objects/hyperalignment_tutorial_data_2.4.hdf5.gz')
+    >>> ds_all = h5load('~/GitHub/ProMisesModel/Data/Faces_Objects/hyperalignment_tutorial_data_2.4.hdf5.gz')
     >>> #Number of voxels to select
     >>> nf = 80
     >>> # Automatic feature selection
@@ -73,7 +73,7 @@ class vMFPmodel(ClassWithCollections):
     >>> dist = [cdist(c, c, "euclidean") for c in coord]
     >>> Q = [np.exp(-d/c.shape[0]) for d,c in zip(dist,coord)]
     >>> #Alignment step
-    >>> gp = vMFPmodel(maxIt = 10, t = 0.001, k = 1, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=True)
+    >>> gp = ProMisesModel(maxIt = 10, t = 0.001, k = 1, Q = Q, ref_ds = None,  scaling=True, reflection = True, subj=True)
     >>> mappers = gp.gpa(ds_all_fs)[1]
     >>> len(mappers)
     """
@@ -203,4 +203,4 @@ __version__ = '0.1'
 if __name__ == '__main__':
     # test1.py executed as script
     # do something
-    vMFPmodel()   
+    ProMisesModel()   

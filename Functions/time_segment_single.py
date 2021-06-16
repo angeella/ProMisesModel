@@ -14,8 +14,8 @@ from mvpa2.measures.anova import vstack
 from mvpa2.mappers.fx import mean_group_sample
 from mvpa2.suite import *
 import os
-os.chdir('C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel') #your path
-from vMFPmodel import vMFPmodel
+os.chdir('C:/Users/Angela Andreella/Documents/GitHub/ProMisesModel') #your path
+from ProMisesModel import ProMisesModel
 from procrustean import ProcrusteanMapper
 
 if __debug__:
@@ -117,7 +117,7 @@ def timesegments_classification_single(
             mappers = hyper_(dss_train)
         else:
             if hyper is 'gpa':
-               hyper_ = copy.deepcopy(vMFPmodel(maxIt =maxIt, t = t, k = k, Q = Q, ref_ds =ref_ds, scaling = scaling, reflection = reflection, subj = subj))
+               hyper_ = copy.deepcopy(ProMisesModel(maxIt =maxIt, t = t, k = k, Q = Q, ref_ds =ref_ds, scaling = scaling, reflection = reflection, subj = subj))
                mappers = hyper_.gpa(dss_train)[1] 
             else:
                mappers = [IdentityMapper() for ds in dss_train]

@@ -10,7 +10,7 @@ from scipy import stats
 import matplotlib as mpl
 #Read data
 
-in_path = "C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel/Data/Auditory"
+in_path = "C:/Users/Angela Andreella/Documents/GitHub/ProMisesModel/Data/Auditory"
 
 mask = nib.load(in_path + "/mask_Superior_Temporal_Gyrus.nii.gz")
 maskdata = mask.get_fdata()
@@ -228,7 +228,7 @@ Pvalues_img = nib.Nifti1Image(Pvalues1, affine=[[  -2.,    0.,    0.,   90.],
     
 plotting.plot_stat_map(Pvalues_img,
                            title = "von Mises-Fisher Procrustes model Vocal - NoVocal",
-                           output_file = "zstat3_vMFPmodel.pdf",
+                           output_file = "zstat3_ProMisesModel.pdf",
                            cut_coords = [-55,-30,-4])
 
 #Tstat
@@ -252,7 +252,7 @@ Tstat_img = nib.Nifti1Image(Tstat1, affine=[[  -2.,    0.,    0.,   90.],
 
 plotting.plot_stat_map(Tstat_img,
                            title = "No alignment Vocal - NoVocal",
-                           output_file = "zstat3Tstat_vMFPmodel.pdf",
+                           output_file = "zstat3Tstat_ProMisesModel.pdf",
                            cut_coords = [-55,-30,-4])
 
 ############################NOALIGNMENT#########################################

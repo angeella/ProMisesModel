@@ -23,8 +23,8 @@ from mvpa2.mappers.boxcar import BoxcarMapper
 from mvpa2.datasets.base import FlattenMapper
 from mvpa2.measures.anova import vstack
 from mvpa2.mappers.fx import mean_group_sample
-os.chdir('C:/Users/Angela Andreella/Documents/GitHub/vMFPmodel') #your path
-from vMFPmodel import vMFPmodel
+os.chdir('C:/Users/Angela Andreella/Documents/GitHub/ProMisesModel') #your path
+from ProMisesModel import ProMisesModel
 from time_segment_cv import timesegments_classification
 from function import distance_pairwise
 import pickle
