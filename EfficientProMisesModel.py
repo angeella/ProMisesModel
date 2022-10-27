@@ -97,34 +97,35 @@ class EfficientProMisesModel:
         if ref_ds is None:
             #ref_ds = np.mean([datasets[ds].samples for ds in range(ndatasets)], axis = 0)
             ref_ds = np.mean(X, axis=0, dtype=np.float64)
-        
+        Xest = X
+        del X
         while dist[count] > t and count < maxIt:
-            Xest = []
-            R = []
+            #Xest = []
+            #R = []
             #ref_start = ref_ds
             #del ref_ds
-            U, S, F = np.linalg.svd(ref_ds, full_matrices = False) 
-            F = F.T
-            del U
-            del S
-            Xstar = [x.dot(F) for x in X]
-            ref_ds_star = ref_ds.dot(F)
+            #U, S, F = np.linalg.svd(ref_ds, full_matrices = False) 
+            #F = F.T
+            #del U
+            #del S
+            #Xstar = [x.dot(F) for x in X]
+            #ref_ds_star = ref_ds.dot(F)
             row, col = Xstar[0].shape
             
             Q = np.matrix(np.identity(col)) * (col - row)/row
             
             pool = mp.Pool(mp.cpu_count())
             if subj:
-                out = [pool.apply(gpa, args=(x, q, k, ref_ds_star, col, scaling, reflection)) for x,q in zip(Xstar,Q)]
+                out = [pool.apply(gpa, args=(x, q, k, ref_ds, col, scaling, reflection)) for x,q in zip(Xest,Q)]
             else:
-                out = [pool.apply(gpa, args=(x, Q, k, ref_ds_star, col, scaling, reflection)) for x in Xstar]
+                out = [pool.apply(gpa, args=(x, Q, k, ref_ds, col, scaling, reflection)) for x in Xest]
             pool.close()  
             count +=1
-            Xeststar = [x[0] for x in out]
+            Xest = [x[0] for x in out]
           #  Rstar = [x[1] for x in out]
           #  scale = [x[2] for x in out]
           #  R = [F.dot(r).dot(F.T) for r in Rstar]
-            Xest = [x.dot(F.T) for x in Xeststar]
+          #  Xest = [x.dot(F.T) for x in Xeststar]
             ref_ds_old = np.copy(ref_ds)
             #print(ref_ds_old)
             ref_ds = np.mean(Xest, axis=0)
@@ -136,6 +137,7 @@ class EfficientProMisesModel:
        # R1 = [r*s for r,s in zip(R,scale)]
        # rot = [mvpa2.mappers.staticprojection.StaticProjectionMapper(np.matrix(R1[p]),auto_train=False) for p in range(ndatasets)]
        # XestLight = Xeststar
+        R = [x[1] for x in out]
         XestQ = []
         for d in range(len(Xest)):
             XestQ[d] = Xest[d].dot(Qlist[d])
@@ -153,4 +155,4 @@ __version__ = '0.1'
 if __name__ == '__main__':
     # test1.py executed as script
     # do something
-    lightvMFPmodel() 
+    EfficientProMisesModel() 
