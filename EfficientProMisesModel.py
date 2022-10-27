@@ -8,9 +8,9 @@ import numpy as np
 import multiprocessing as mp
 import scipy.spatial.distance
 
-__all__= ['EfficientProMisesModel'] #explicitly exports the symbols priorGPA
+__all__= ['EfficientProMisesModel'] #explicitly exports the symbols EfficientProMisesModel
 
-#Useful function
+#Internal function
 def gpa(X, Q, k, ref_ds, col, scaling, reflection):
 
     if Q is None:
