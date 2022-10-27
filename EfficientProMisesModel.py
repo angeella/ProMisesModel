@@ -72,10 +72,10 @@ class EfficientProMisesModel:
 
         XQ = []
         Qlist = []
-        for ds in range(len(img_dt)):
-          U, S, Q = np.linalg.svd(datasets, full_matrices = False) 
+        for ds in range(len(datasets)):
+          U, S, Q = np.linalg.svd(datasets[ds], full_matrices = False) 
           Qlist.append(Q)
-          XQ.append(datasets.dot(Q.T))
+          XQ.append(datasets[ds].dot(Q.T))
         
         datasets = XQ
         del XQ
@@ -136,7 +136,7 @@ class EfficientProMisesModel:
        # R1 = [r*s for r,s in zip(R,scale)]
        # rot = [mvpa2.mappers.staticprojection.StaticProjectionMapper(np.matrix(R1[p]),auto_train=False) for p in range(ndatasets)]
        # XestLight = Xeststar
-       
+        XestQ = []
         for d in range(len(Xest)):
             XestQ[d] = Xest[d].dot(Qlist[d])
         Xest = XestQ
