@@ -22,6 +22,8 @@ Gower, J. C., & Dijksterhuis, G. B. (2004). Procrustes problems (Vol. 30). OUP O
 
 Haxby, J. V., Guntupalli, J. S., Connolly, A. C., Halchenko, Y. O., Conroy, B. R., Gobbini, M. I., ... & Ramadge, P. J. (2011). A common, high-dimensional model of the representational space in human ventral temporal cortex. Neuron, 72(2), 404-416.
 
+Goodall, C. (1991). Procrustes methods in the statistical analysis of shape. Journal of the Royal Statistical Society: Series B (Methodological), 53(2), 285-321.
+
 # Did you find some bugs?
 
 Please write to angela.andreella[\at]unive[\dot]it or insert a reproducible example using [reprex](https://github.com/tidyverse/reprex) on my [issue github page](https://github.com/angeella/ProMisesModel/issues).
